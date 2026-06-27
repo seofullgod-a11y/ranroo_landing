@@ -1,0 +1,756 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>ร้านรู้ — บัญชีร้านอาหารที่จดให้เองผ่านไลน์</title>
+<meta name="description" content="จดรายรับ-รายจ่ายร้านอาหารแค่พิมพ์ในไลน์ หรือถ่ายรูปบิล AI อ่านให้เอง ดึงยอด Grab/LineMan/Shopee อัตโนมัติ รู้กำไรต่อจานทันที สรุปกำไร-ขาดทุนพร้อมกราฟ" />
+<meta property="og:title" content="ร้านรู้ — บัญชีร้านอาหารที่จดให้เองผ่านไลน์" />
+<meta property="og:description" content="พิมพ์ในไลน์ ถ่ายบิล AI จดให้ รู้กำไรต่อจานทันที" />
+<meta property="og:type" content="website" />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Kanit:wght@500;600;700;800&family=IBM+Plex+Sans+Thai:wght@400;500;600;700&family=IBM+Plex+Mono:wght@500;600&display=swap" rel="stylesheet" />
+<style>
+  :root{
+    --bg:#ffffff;
+    --bg-soft:#eef4ff;
+    --bg-tint:#f6f9ff;
+    --ink:#0a1f44;
+    --ink-soft:#51688f;
+    --ink-faint:#8197b8;
+    --blue:#1f6bff;
+    --blue-deep:#0b49c9;
+    --blue-bright:#4d8dff;
+    --sky:#bfd9ff;
+    --sky-soft:#dcebff;
+    --border:#dce7fb;
+    --card:#ffffff;
+    --profit:#00a86b;
+    --profit-soft:#e3f8ef;
+    --warn:#f0883e;
+    --line:#06c755;
+    --shadow-sm:0 1px 3px rgba(16,51,122,.06),0 1px 2px rgba(16,51,122,.04);
+    --shadow-md:0 12px 30px -12px rgba(16,51,122,.22);
+    --shadow-lg:0 40px 80px -30px rgba(16,51,122,.35);
+    --r-sm:10px; --r-md:16px; --r-lg:24px; --r-xl:32px;
+    --maxw:1160px;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html{scroll-behavior:smooth;-webkit-text-size-adjust:100%}
+  body{
+    font-family:"IBM Plex Sans Thai",system-ui,sans-serif;
+    color:var(--ink);
+    background:var(--bg);
+    line-height:1.6;
+    -webkit-font-smoothing:antialiased;
+    overflow-x:hidden;
+  }
+  h1,h2,h3,.display{font-family:"Kanit",sans-serif;line-height:1.15;letter-spacing:-.01em}
+  a{color:inherit;text-decoration:none}
+  .wrap{max-width:var(--maxw);margin:0 auto;padding:0 22px}
+  .mono{font-family:"IBM Plex Mono",monospace;font-variant-numeric:tabular-nums}
+
+  /* ---------- NAV ---------- */
+  header.nav{
+    position:sticky;top:0;z-index:50;
+    background:rgba(255,255,255,.82);
+    backdrop-filter:saturate(160%) blur(14px);
+    border-bottom:1px solid rgba(220,231,251,.7);
+  }
+  .nav-inner{display:flex;align-items:center;gap:14px;height:66px}
+  .brand{display:flex;align-items:center;gap:10px;font-family:"Kanit";font-weight:700;font-size:20px;letter-spacing:-.02em}
+  .brand .logo{
+    width:34px;height:34px;border-radius:10px;display:grid;place-items:center;
+    background:linear-gradient(140deg,var(--blue),var(--blue-bright));
+    color:#fff;box-shadow:0 6px 14px -4px rgba(31,107,255,.55);
+  }
+  .brand .logo svg{width:20px;height:20px}
+  .nav-links{display:flex;gap:6px;margin-left:18px}
+  .nav-links a{padding:8px 13px;border-radius:8px;color:var(--ink-soft);font-weight:500;font-size:15px;transition:.18s}
+  .nav-links a:hover{color:var(--blue-deep);background:var(--bg-soft)}
+  .nav-cta{margin-left:auto;display:flex;align-items:center;gap:10px}
+  .btn{
+    display:inline-flex;align-items:center;gap:8px;justify-content:center;
+    font-family:"Kanit";font-weight:600;font-size:15px;
+    padding:11px 20px;border-radius:12px;border:1px solid transparent;
+    cursor:pointer;transition:.18s;white-space:nowrap;
+  }
+  .btn svg{width:18px;height:18px}
+  .btn-primary{background:var(--blue);color:#fff;box-shadow:0 8px 20px -8px rgba(31,107,255,.6)}
+  .btn-primary:hover{background:var(--blue-deep);transform:translateY(-1px);box-shadow:0 12px 24px -8px rgba(31,107,255,.7)}
+  .btn-line{background:var(--line);color:#fff;box-shadow:0 8px 20px -8px rgba(6,199,85,.55)}
+  .btn-line:hover{filter:brightness(1.05);transform:translateY(-1px)}
+  .btn-ghost{background:#fff;color:var(--ink);border-color:var(--border)}
+  .btn-ghost:hover{border-color:var(--blue-bright);color:var(--blue-deep)}
+  .btn-lg{padding:15px 28px;font-size:17px;border-radius:14px}
+  .nav-burger{display:none;margin-left:auto;width:42px;height:42px;border:1px solid var(--border);border-radius:10px;background:#fff;align-items:center;justify-content:center;cursor:pointer}
+  .nav-burger svg{width:22px;height:22px;color:var(--ink)}
+
+  /* ---------- HERO ---------- */
+  .hero{position:relative;padding:72px 0 40px;overflow:hidden}
+  .hero::before{
+    content:"";position:absolute;inset:0;z-index:-2;
+    background:
+      radial-gradient(900px 480px at 78% -8%, #e4eeff 0%, rgba(228,238,255,0) 60%),
+      radial-gradient(700px 500px at -6% 12%, #eef4ff 0%, rgba(238,244,255,0) 55%),
+      linear-gradient(180deg,#fbfdff 0%,#ffffff 100%);
+  }
+  .hero-grid{display:grid;grid-template-columns:1.05fr .95fr;gap:40px;align-items:center}
+  .eyebrow{
+    display:inline-flex;align-items:center;gap:8px;
+    background:#fff;border:1px solid var(--border);
+    padding:7px 14px;border-radius:100px;font-size:13.5px;font-weight:600;color:var(--blue-deep);
+    box-shadow:var(--shadow-sm);margin-bottom:22px;
+  }
+  .eyebrow .dot{width:8px;height:8px;border-radius:50%;background:var(--profit);box-shadow:0 0 0 4px var(--profit-soft)}
+  h1.hero-title{font-size:clamp(34px,5.2vw,58px);font-weight:700;letter-spacing:-.025em}
+  h1.hero-title .hl{
+    position:relative;color:var(--blue-deep);white-space:nowrap;
+  }
+  h1.hero-title .hl::after{
+    content:"";position:absolute;left:-2px;right:-2px;bottom:6px;height:14px;z-index:-1;
+    background:linear-gradient(90deg,var(--sky),#a7ccff);border-radius:6px;opacity:.65;
+  }
+  .hero-sub{font-size:clamp(16.5px,2vw,19px);color:var(--ink-soft);margin:22px 0 30px;max-width:520px}
+  .hero-actions{display:flex;flex-wrap:wrap;gap:12px;align-items:center}
+  .hero-trust{display:flex;align-items:center;gap:18px;margin-top:28px;flex-wrap:wrap}
+  .trust-item{display:flex;align-items:center;gap:8px;color:var(--ink-soft);font-size:14px;font-weight:500}
+  .trust-item svg{width:18px;height:18px;color:var(--profit)}
+
+  /* phone mockup */
+  .phone-stage{position:relative;display:flex;justify-content:center;align-items:center;min-height:560px}
+  .blob{position:absolute;inset:auto;z-index:0}
+  .blob.b1{width:320px;height:320px;border-radius:46% 54% 60% 40%/52% 44% 56% 48%;
+    background:linear-gradient(135deg,#4d8dff,#1f6bff);filter:blur(2px);opacity:.16;top:30px;right:30px;animation:float 9s ease-in-out infinite}
+  .blob.b2{width:200px;height:200px;border-radius:50%;background:#9fc6ff;opacity:.22;bottom:50px;left:14px;animation:float 11s ease-in-out infinite reverse}
+  @keyframes float{0%,100%{transform:translateY(0)}50%{transform:translateY(-22px)}}
+
+  .phone{
+    position:relative;z-index:2;width:300px;height:600px;border-radius:42px;
+    background:linear-gradient(160deg,#10254e,#0a1f44);
+    padding:12px;box-shadow:var(--shadow-lg),0 0 0 2px rgba(255,255,255,.04) inset;
+  }
+  .phone .notch{position:absolute;top:12px;left:50%;transform:translateX(-50%);width:120px;height:26px;background:#0a1f44;border-radius:0 0 16px 16px;z-index:5}
+  .screen{
+    width:100%;height:100%;border-radius:32px;background:#eaf1fb;overflow:hidden;
+    display:flex;flex-direction:column;position:relative;
+  }
+  .app-top{background:var(--line);color:#fff;padding:34px 16px 12px;display:flex;align-items:center;gap:10px}
+  .app-top .ava{width:34px;height:34px;border-radius:50%;background:#fff;display:grid;place-items:center;color:var(--line);font-family:"Kanit";font-weight:700}
+  .app-top .nm{font-family:"Kanit";font-weight:600;font-size:15px;line-height:1.2}
+  .app-top .st{font-size:11px;opacity:.85}
+  .chat{flex:1;padding:14px 12px;display:flex;flex-direction:column;gap:9px;overflow:hidden;background:
+    linear-gradient(180deg,#dfeafb,#eaf1fb)}
+  .bubble{max-width:80%;padding:9px 13px;border-radius:15px;font-size:13.5px;line-height:1.45;opacity:0;transform:translateY(8px);box-shadow:var(--shadow-sm)}
+  .bubble.in{animation:pop .45s forwards}
+  .bubble.me{align-self:flex-end;background:#9fe7b6;border-bottom-right-radius:5px;color:#063d20}
+  .bubble.bot{align-self:flex-start;background:#fff;border-bottom-left-radius:5px}
+  .bubble.photo{padding:6px;background:#fff;align-self:flex-end;border-bottom-right-radius:5px}
+  .bubble.photo .ph{width:150px;height:96px;border-radius:10px;background:
+    repeating-linear-gradient(0deg,#f1f5fb,#f1f5fb 7px,#e6edf7 7px,#e6edf7 9px);position:relative;display:grid;place-items:center}
+  .bubble.photo .ph svg{width:30px;height:30px;color:var(--ink-faint)}
+  @keyframes pop{to{opacity:1;transform:translateY(0)}}
+  .ledger-card{
+    align-self:stretch;background:#fff;border-radius:14px;padding:12px;box-shadow:var(--shadow-md);
+    border:1px solid var(--border);opacity:0;transform:translateY(10px) scale(.97)
+  }
+  .ledger-card.in{animation:pop .5s forwards}
+  .lc-head{display:flex;align-items:center;gap:7px;font-family:"Kanit";font-weight:600;font-size:12.5px;color:var(--blue-deep);margin-bottom:8px}
+  .lc-head svg{width:15px;height:15px}
+  .lc-row{display:flex;justify-content:space-between;font-size:12px;padding:3px 0;color:var(--ink-soft)}
+  .lc-row b{color:var(--ink);font-weight:600}
+  .lc-profit{margin-top:8px;padding-top:8px;border-top:1px dashed var(--border);display:flex;justify-content:space-between;align-items:center}
+  .lc-profit .lbl{font-size:12px;color:var(--ink-soft)}
+  .lc-profit .val{font-family:"Kanit";font-weight:700;font-size:18px;color:var(--profit)}
+  .typing{align-self:flex-start;background:#fff;border-radius:15px;border-bottom-left-radius:5px;padding:11px 14px;display:flex;gap:4px;box-shadow:var(--shadow-sm)}
+  .typing span{width:6px;height:6px;border-radius:50%;background:var(--ink-faint);animation:blink 1.2s infinite}
+  .typing span:nth-child(2){animation-delay:.2s}.typing span:nth-child(3){animation-delay:.4s}
+  @keyframes blink{0%,60%,100%{opacity:.3;transform:translateY(0)}30%{opacity:1;transform:translateY(-3px)}}
+
+  /* floating stat chips on phone */
+  .chip{
+    position:absolute;z-index:4;background:#fff;border:1px solid var(--border);
+    border-radius:14px;padding:10px 13px;box-shadow:var(--shadow-md);display:flex;align-items:center;gap:10px;
+    animation:floatChip 6s ease-in-out infinite;
+  }
+  .chip .ic{width:34px;height:34px;border-radius:9px;display:grid;place-items:center;flex:none}
+  .chip .ic svg{width:18px;height:18px}
+  .chip .k{font-size:11px;color:var(--ink-faint);line-height:1.2}
+  .chip .v{font-family:"Kanit";font-weight:700;font-size:15px;line-height:1.2}
+  .chip.c1{top:84px;left:-44px}
+  .chip.c1 .ic{background:var(--profit-soft);color:var(--profit)}
+  .chip.c2{bottom:120px;right:-40px;animation-delay:1.5s}
+  .chip.c2 .ic{background:#e7efff;color:var(--blue)}
+  @keyframes floatChip{0%,100%{transform:translateY(0)}50%{transform:translateY(-12px)}}
+
+  /* ---------- LOGO STRIP ---------- */
+  .strip{padding:26px 0 6px}
+  .strip .wrap{display:flex;align-items:center;gap:26px;flex-wrap:wrap;justify-content:center}
+  .strip .lab{font-size:13.5px;color:var(--ink-faint);font-weight:500}
+  .pf{display:inline-flex;align-items:center;gap:7px;font-family:"Kanit";font-weight:600;font-size:15px;color:var(--ink-soft);opacity:.9}
+  .pf .b{width:26px;height:26px;border-radius:7px;display:grid;place-items:center;color:#fff;font-size:13px}
+
+  /* ---------- SECTION SHELL ---------- */
+  section{position:relative}
+  .sec-head{text-align:center;max-width:680px;margin:0 auto 46px}
+  .sec-tag{display:inline-flex;align-items:center;gap:7px;color:var(--blue);font-family:"Kanit";font-weight:600;font-size:14px;letter-spacing:.02em;text-transform:uppercase;margin-bottom:12px}
+  .sec-tag .ln{width:22px;height:2px;background:var(--blue-bright);border-radius:2px}
+  .sec-head h2{font-size:clamp(27px,3.6vw,40px);font-weight:700}
+  .sec-head p{color:var(--ink-soft);font-size:17px;margin-top:14px}
+
+  /* ---------- FEATURES ---------- */
+  .features{padding:78px 0;background:linear-gradient(180deg,#fff,var(--bg-tint))}
+  .feat-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}
+  .feat{
+    background:var(--card);border:1px solid var(--border);border-radius:var(--r-lg);
+    padding:26px 24px;transition:.25s;position:relative;overflow:hidden;
+  }
+  .feat::after{content:"";position:absolute;inset:0;border-radius:inherit;box-shadow:0 0 0 0 rgba(31,107,255,0);transition:.25s}
+  .feat:hover{transform:translateY(-4px);border-color:var(--blue-bright);box-shadow:var(--shadow-md)}
+  .feat .fi{
+    width:52px;height:52px;border-radius:14px;display:grid;place-items:center;margin-bottom:18px;
+    background:linear-gradient(140deg,#eaf1ff,#dbe8ff);color:var(--blue-deep);
+  }
+  .feat .fi svg{width:26px;height:26px}
+  .feat h3{font-size:19px;font-weight:600;margin-bottom:9px}
+  .feat p{color:var(--ink-soft);font-size:15px}
+  .feat .badge{position:absolute;top:18px;right:18px;font-size:11px;font-weight:600;font-family:"Kanit";color:var(--warn);background:#fff3e9;padding:3px 9px;border-radius:100px;border:1px solid #ffe1c7}
+  .feat.span2{grid-column:span 1}
+
+  /* ---------- CALCULATOR ---------- */
+  .calc{padding:80px 0;background:#fff}
+  .calc-card{
+    background:linear-gradient(160deg,#0c1f47 0%,#0a1f44 60%,#10295a 100%);
+    border-radius:var(--r-xl);padding:0;overflow:hidden;box-shadow:var(--shadow-lg);
+    display:grid;grid-template-columns:1fr 1fr;
+  }
+  .calc-left{padding:42px 40px;color:#fff}
+  .calc-left .sec-tag{color:#7fb0ff}
+  .calc-left .sec-tag .ln{background:#7fb0ff}
+  .calc-left h2{color:#fff;font-size:clamp(25px,3vw,34px);font-weight:700}
+  .calc-left p{color:#aebfe0;margin-top:14px;font-size:16px}
+  .ctrl{margin-top:22px}
+  .ctrl label{display:flex;justify-content:space-between;align-items:center;font-size:14px;color:#c7d4ef;margin-bottom:9px}
+  .ctrl label .val{font-family:"IBM Plex Mono";font-weight:600;color:#fff;background:rgba(255,255,255,.08);padding:2px 9px;border-radius:7px}
+  input[type=range]{
+    -webkit-appearance:none;width:100%;height:6px;border-radius:6px;
+    background:rgba(255,255,255,.16);outline:none;cursor:pointer;
+  }
+  input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:22px;height:22px;border-radius:50%;
+    background:#fff;border:4px solid var(--blue-bright);box-shadow:0 3px 8px rgba(0,0,0,.3);cursor:pointer;transition:.15s}
+  input[type=range]::-webkit-slider-thumb:hover{transform:scale(1.12)}
+  input[type=range]::-moz-range-thumb{width:22px;height:22px;border-radius:50%;background:#fff;border:4px solid var(--blue-bright);cursor:pointer}
+  input[type=range].warn::-webkit-slider-thumb{border-color:var(--warn)}
+  .calc-right{background:#0e2452;padding:42px 40px;display:flex;flex-direction:column;justify-content:center;border-left:1px solid rgba(255,255,255,.06)}
+  .result-big{text-align:center;margin-bottom:6px}
+  .result-big .cap{font-size:14px;color:#8fa5ce;font-family:"Kanit";font-weight:500}
+  .result-big .num{font-family:"Kanit";font-weight:800;font-size:clamp(46px,7vw,64px);line-height:1;margin-top:6px;color:#3ee6a0;transition:.2s}
+  .result-big .num.neg{color:#ff7a7a}
+  .result-big .unit{font-size:22px;color:#8fa5ce;font-weight:500}
+  .margin-row{display:flex;justify-content:center;gap:8px;margin-top:10px}
+  .pill{font-family:"Kanit";font-weight:600;font-size:13.5px;padding:5px 13px;border-radius:100px;background:rgba(62,230,160,.14);color:#3ee6a0}
+  .pill.neg{background:rgba(255,122,122,.16);color:#ff9b9b}
+  .break{margin-top:26px;border-top:1px solid rgba(255,255,255,.08);padding-top:18px;display:flex;flex-direction:column;gap:11px}
+  .break .br{display:flex;justify-content:space-between;align-items:center;font-size:14px}
+  .break .br .l{color:#9fb1d6;display:flex;align-items:center;gap:8px}
+  .break .br .l .sw{width:10px;height:10px;border-radius:3px}
+  .break .br .r{font-family:"IBM Plex Mono";font-weight:600;color:#fff}
+  .alert{margin-top:18px;background:rgba(240,136,62,.12);border:1px solid rgba(240,136,62,.3);border-radius:12px;padding:11px 14px;font-size:13.5px;color:#ffce9e;display:none;align-items:center;gap:9px}
+  .alert.show{display:flex}
+  .alert svg{width:18px;height:18px;flex:none}
+
+  /* ---------- STEPS ---------- */
+  .steps{padding:80px 0;background:linear-gradient(180deg,var(--bg-tint),#fff)}
+  .step-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:20px;position:relative}
+  .step{background:#fff;border:1px solid var(--border);border-radius:var(--r-lg);padding:30px 26px;position:relative}
+  .step .no{
+    font-family:"Kanit";font-weight:800;font-size:15px;width:38px;height:38px;border-radius:11px;
+    display:grid;place-items:center;background:var(--blue);color:#fff;margin-bottom:18px;box-shadow:0 8px 16px -6px rgba(31,107,255,.5);
+  }
+  .step h3{font-size:19px;font-weight:600;margin-bottom:8px}
+  .step p{color:var(--ink-soft);font-size:15px}
+  .step .arrow{position:absolute;right:-16px;top:42px;color:var(--sky);z-index:2}
+  .step .arrow svg{width:30px;height:30px}
+
+  /* ---------- DELIVERY ---------- */
+  .deliv{padding:30px 0 80px;background:#fff}
+  .deliv-card{
+    background:linear-gradient(135deg,#eef4ff,#e0ecff);border:1px solid var(--border);
+    border-radius:var(--r-xl);padding:46px;display:grid;grid-template-columns:1fr auto;gap:30px;align-items:center;position:relative;overflow:hidden;
+  }
+  .deliv-card h2{font-size:clamp(24px,3vw,32px);font-weight:700;max-width:480px}
+  .deliv-card p{color:var(--ink-soft);margin-top:12px;font-size:16px;max-width:460px}
+  .deliv-logos{display:flex;gap:14px;flex-wrap:wrap}
+  .dlogo{background:#fff;border-radius:16px;padding:16px 20px;box-shadow:var(--shadow-md);display:flex;flex-direction:column;align-items:center;gap:8px;min-width:108px}
+  .dlogo .ic{width:42px;height:42px;border-radius:11px;display:grid;place-items:center;color:#fff;font-family:"Kanit";font-weight:700}
+  .dlogo .nm{font-family:"Kanit";font-weight:600;font-size:14px}
+  .dlogo .auto{font-size:11px;color:var(--profit);font-weight:600;display:flex;align-items:center;gap:4px}
+  .dlogo .auto svg{width:13px;height:13px}
+
+  /* ---------- CTA ---------- */
+  .cta{padding:30px 0 90px;background:#fff}
+  .cta-card{
+    background:linear-gradient(150deg,var(--blue) 0%,var(--blue-deep) 100%);
+    border-radius:var(--r-xl);padding:56px 40px;text-align:center;color:#fff;position:relative;overflow:hidden;box-shadow:var(--shadow-lg);
+  }
+  .cta-card::before{content:"";position:absolute;top:-60px;right:-40px;width:280px;height:280px;border-radius:50%;background:rgba(255,255,255,.08)}
+  .cta-card::after{content:"";position:absolute;bottom:-90px;left:-50px;width:240px;height:240px;border-radius:50%;background:rgba(255,255,255,.06)}
+  .cta-card h2{font-size:clamp(27px,3.6vw,40px);font-weight:700;position:relative}
+  .cta-card p{color:#d6e4ff;margin:16px auto 30px;font-size:17px;max-width:520px;position:relative}
+  .cta-actions{display:flex;gap:14px;justify-content:center;flex-wrap:wrap;position:relative}
+  .cta-card .btn-line{background:#fff;color:var(--blue-deep)}
+  .cta-card .btn-ghost{background:rgba(255,255,255,.12);color:#fff;border-color:rgba(255,255,255,.3)}
+  .cta-card .btn-ghost:hover{background:rgba(255,255,255,.2);color:#fff}
+  .cta-note{margin-top:18px;font-size:13.5px;color:#bcd2ff;position:relative}
+
+  /* ---------- FOOTER ---------- */
+  footer{background:#081a3a;color:#a9bce0;padding:54px 0 30px}
+  .foot-grid{display:grid;grid-template-columns:1.4fr 1fr 1fr 1fr;gap:30px;padding-bottom:34px;border-bottom:1px solid rgba(255,255,255,.08)}
+  footer .brand{color:#fff}
+  footer .fdesc{margin-top:14px;font-size:14px;max-width:280px;color:#8fa5ce}
+  .fcol h4{font-family:"Kanit";font-weight:600;color:#fff;font-size:15px;margin-bottom:14px}
+  .fcol a{display:block;color:#8fa5ce;font-size:14px;padding:5px 0;transition:.15s}
+  .fcol a:hover{color:#fff}
+  .foot-bottom{display:flex;justify-content:space-between;align-items:center;padding-top:22px;font-size:13px;color:#7589ad;flex-wrap:wrap;gap:10px}
+
+  .reveal{opacity:0;transform:translateY(24px);transition:opacity .6s cubic-bezier(.16,1,.3,1),transform .6s cubic-bezier(.16,1,.3,1)}
+  .reveal.show{opacity:1;transform:none}
+
+  /* ---------- RESPONSIVE ---------- */
+  @media(max-width:980px){
+    .hero-grid{grid-template-columns:1fr;gap:10px}
+    .phone-stage{min-height:520px;margin-top:10px}
+    .nav-links{display:none}
+    .nav-burger{display:flex}
+    .calc-card{grid-template-columns:1fr}
+    .calc-right{border-left:none;border-top:1px solid rgba(255,255,255,.06)}
+    .feat-grid{grid-template-columns:repeat(2,1fr)}
+    .step-grid{grid-template-columns:1fr}
+    .step .arrow{display:none}
+    .deliv-card{grid-template-columns:1fr}
+    .foot-grid{grid-template-columns:1fr 1fr}
+  }
+  @media(max-width:560px){
+    .hero{padding:46px 0 20px}
+    .feat-grid{grid-template-columns:1fr}
+    .calc-left,.calc-right{padding:30px 24px}
+    .deliv-card{padding:30px 24px}
+    .cta-card{padding:40px 24px}
+    .foot-grid{grid-template-columns:1fr 1fr}
+    .nav-cta .btn-ghost{display:none}
+  }
+  @media(prefers-reduced-motion:reduce){
+    *{animation:none!important;scroll-behavior:auto!important;transition:none!important}
+    .reveal{opacity:1;transform:none}
+    .bubble,.ledger-card{opacity:1;transform:none}
+  }
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<header class="nav">
+  <div class="wrap nav-inner">
+    <a href="#" class="brand">
+      <span class="logo"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 4h18"/><path d="M5 4v16a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V4"/><path d="M9 9h6"/><path d="M9 13h6"/><path d="M9 17h3"/></svg></span>
+      ร้านรู้
+    </a>
+    <nav class="nav-links">
+      <a href="#features">ฟีเจอร์</a>
+      <a href="#calc">คิดกำไรต่อจาน</a>
+      <a href="#how">วิธีใช้</a>
+      <a href="#delivery">เดลิเวอรี่</a>
+    </nav>
+    <div class="nav-cta">
+      <a href="#" class="btn btn-ghost">เข้าสู่ระบบ</a>
+      <a href="#cta" class="btn btn-line">
+        <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 3C6.5 3 2 6.6 2 11c0 2.6 1.6 4.9 4 6.3-.2.7-.7 2.4-.8 2.8 0 0-.1.4.2.5s.5 0 .5 0c.4-.1 3-2 4-2.7.7.1 1.4.2 2.1.2 5.5 0 10-3.6 10-8S17.5 3 12 3Z"/></svg>
+        เริ่มใช้ฟรี
+      </a>
+    </div>
+    <button class="nav-burger" aria-label="เมนู" onclick="document.querySelector('.nav-links').classList.toggle('open');this.classList.toggle('on')">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 6h16M4 12h16M4 18h16"/></svg>
+    </button>
+  </div>
+</header>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="wrap hero-grid">
+    <div class="hero-copy">
+      <span class="eyebrow"><span class="dot"></span> บัญชีร้านอาหารยุคใหม่ • ไม่ต้องจดมือ</span>
+      <h1 class="hero-title">เลิกจดมือ<br>เลิก<span class="hl">เดากำไร</span><br>แค่พิมพ์ในไลน์</h1>
+      <p class="hero-sub">จดรายรับ-รายจ่ายแค่พิมพ์ในไลน์ หรือถ่ายรูปบิลให้ AI อ่านให้เอง รู้กำไรต่อจานทันที สรุปกำไร-ขาดทุนรายวัน/รายเดือนพร้อมกราฟ ครบในที่เดียว</p>
+      <div class="hero-actions">
+        <a href="#cta" class="btn btn-line btn-lg">
+          <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 3C6.5 3 2 6.6 2 11c0 2.6 1.6 4.9 4 6.3-.2.7-.7 2.4-.8 2.8 0 0-.1.4.2.5s.5 0 .5 0c.4-.1 3-2 4-2.7.7.1 1.4.2 2.1.2 5.5 0 10-3.6 10-8S17.5 3 12 3Z"/></svg>
+          เริ่มใช้ฟรีผ่านไลน์
+        </a>
+        <a href="#calc" class="btn btn-ghost btn-lg">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 17V9"/><path d="M13 17V5"/><path d="M5 17v-3"/></svg>
+          ลองคิดกำไรต่อจาน
+        </a>
+      </div>
+      <div class="hero-trust">
+        <span class="trust-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg> ใช้ฟรี ไม่ต้องลงแอป</span>
+        <span class="trust-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg> ตั้งค่าเสร็จใน 2 นาที</span>
+        <span class="trust-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg> ข้อมูลปลอดภัย</span>
+      </div>
+    </div>
+
+    <div class="phone-stage">
+      <span class="blob b1"></span><span class="blob b2"></span>
+
+      <div class="chip c1">
+        <span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 17l6-6 4 4 8-8"/><path d="M17 7h4v4"/></svg></span>
+        <span><span class="k">กำไรวันนี้</span><br><span class="v" style="color:var(--profit)">+3,240 ฿</span></span>
+      </div>
+      <div class="chip c2">
+        <span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg></span>
+        <span><span class="k">จดอัตโนมัติ</span><br><span class="v" style="color:var(--blue)">28 รายการ</span></span>
+      </div>
+
+      <div class="phone">
+        <span class="notch"></span>
+        <div class="screen">
+          <div class="app-top">
+            <span class="ava">รร</span>
+            <div><div class="nm">ร้านรู้ ผู้ช่วยบัญชี</div><div class="st">● ออนไลน์ • ตอบทันที</div></div>
+          </div>
+          <div class="chat" id="chat"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- LOGO STRIP -->
+<div class="strip">
+  <div class="wrap">
+    <span class="lab">ดึงยอดขายเข้าระบบอัตโนมัติจาก</span>
+    <span class="pf"><span class="b" style="background:#00b14f">G</span> Grab</span>
+    <span class="pf"><span class="b" style="background:#06c167">L</span> LineMan</span>
+    <span class="pf"><span class="b" style="background:#ee4d2d">S</span> Shopee Food</span>
+    <span class="pf"><span class="b" style="background:#0a1f44">฿</span> เงินสด & โอน</span>
+  </div>
+</div>
+
+<!-- FEATURES -->
+<section class="features" id="features">
+  <div class="wrap">
+    <div class="sec-head reveal">
+      <div class="sec-tag"><span class="ln"></span> ฟีเจอร์</div>
+      <h2>ทุกอย่างที่ร้านต้องรู้ ในที่เดียว</h2>
+      <p>ออกแบบมาเพื่อเจ้าของร้านอาหารที่ไม่มีเวลานั่งทำบัญชี ให้เทคโนโลยีจัดการแทน</p>
+    </div>
+    <div class="feat-grid">
+      <div class="feat reveal">
+        <div class="fi"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 9h8"/><path d="M8 13h6"/><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5Z"/></svg></div>
+        <h3>จดผ่านไลน์ แค่พิมพ์</h3>
+        <p>พิมพ์ "ขายกะเพรา 5 จาน 250" หรือ "ซื้อหมู 800" ในแชทไลน์ ระบบบันทึกเข้าบัญชีให้ทันที ไม่ต้องเปิดแอป</p>
+      </div>
+      <div class="feat reveal">
+        <div class="fi"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14.5 4h-5L7 7H4a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2h-3l-2.5-3Z"/><circle cx="12" cy="13" r="3.5"/></svg></div>
+        <h3>ถ่ายรูปบิล AI อ่านให้</h3>
+        <p>ถ่ายรูปใบเสร็จหรือบิลซื้อของ AI อ่านยอด แยกรายการ และลงบัญชีให้อัตโนมัติ — ไม่ต้องคีย์ทีละบรรทัด</p>
+      </div>
+      <div class="feat reveal">
+        <span class="badge">เฉพาะคน</span>
+        <div class="fi"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2v20"/><path d="m17 5-5-3-5 3"/><path d="M3 7v10l9 5 9-5V7"/><path d="m3 7 9 5 9-5"/></svg></div>
+        <h3>ดึงยอดเดลิเวอรี่อัตโนมัติ</h3>
+        <p>ยอด Grab / LineMan / Shopee Food เข้าระบบเองทุกวัน ไม่ต้องจดมือ (ฟีเจอร์เฉพาะคน อยากทดลองทักได้)</p>
+      </div>
+      <div class="feat reveal">
+        <div class="fi"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M9.5 9.5a2.5 2.5 0 0 1 5 0c0 1.5-2.5 2-2.5 3.5"/><path d="M12 17h.01"/></svg></div>
+        <h3>รู้กำไรต่อจานทันที</h3>
+        <p>วัตถุดิบขึ้นราคา เห็นเลยว่ากระทบกำไรแต่ละเมนูแค่ไหน ปรับราคาได้ทันก่อนขาดทุนเงียบ ๆ</p>
+      </div>
+      <div class="feat reveal">
+        <div class="fi"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 7a4 4 0 1 0-8 0"/><path d="M3 21v-1a6 6 0 0 1 6-6h6a6 6 0 0 1 6 6v1"/><circle cx="12" cy="7" r="0"/></svg></div>
+        <h3>คิดค่าแรง + ต้นทุนรวมให้</h3>
+        <p>รวมค่าวัตถุดิบ ค่าแรง ค่าแก๊ส ค่าเช่า ให้อัตโนมัติ เห็นต้นทุนจริงต่อจานแบบครบทุกบาท</p>
+      </div>
+      <div class="feat reveal">
+        <div class="fi"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 3v18h18"/><rect x="7" y="11" width="3" height="6" rx="1"/><rect x="12" y="7" width="3" height="10" rx="1"/><rect x="17" y="13" width="3" height="4" rx="1"/></svg></div>
+        <h3>สรุปกำไร-ขาดทุน พร้อมกราฟ</h3>
+        <p>ดูภาพรวมรายวัน/รายเดือนเป็นกราฟอ่านง่าย รู้ทันทีว่าวันไหนกำไรดี เดือนไหนต้องระวัง</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CALCULATOR -->
+<section class="calc" id="calc">
+  <div class="wrap">
+    <div class="sec-head reveal">
+      <div class="sec-tag"><span class="ln"></span> ลองเล่นดู</div>
+      <h2>วัตถุดิบขึ้นราคา กำไรหายไปเท่าไร?</h2>
+      <p>ลากสไลเดอร์ดูว่าถ้าต้นทุนวัตถุดิบขึ้น กำไรต่อจานของคุณจะเหลือเท่าไร — แบบเรียลไทม์</p>
+    </div>
+
+    <div class="calc-card reveal">
+      <div class="calc-left">
+        <div class="sec-tag"><span class="ln"></span> เมนู: ข้าวกะเพราหมูไข่ดาว</div>
+        <h2>ปรับตัวเลขร้านคุณ</h2>
+        <p>ใส่ราคาขายและต้นทุนจริงของร้าน แล้วลองดูผลกระทบเมื่อของขึ้นราคา</p>
+
+        <div class="ctrl">
+          <label>ราคาขาย / จาน <span class="val mono"><span id="vPrice">60</span> ฿</span></label>
+          <input type="range" id="price" min="30" max="150" value="60" step="5">
+        </div>
+        <div class="ctrl">
+          <label>ต้นทุนวัตถุดิบ / จาน <span class="val mono"><span id="vMat">22</span> ฿</span></label>
+          <input type="range" id="mat" min="5" max="90" value="22" step="1">
+        </div>
+        <div class="ctrl">
+          <label>ค่าแรง + โสหุ้ย / จาน <span class="val mono"><span id="vLabor">14</span> ฿</span></label>
+          <input type="range" id="labor" min="0" max="50" value="14" step="1">
+        </div>
+        <div class="ctrl">
+          <label>วัตถุดิบขึ้นราคา <span class="val mono" style="color:#ffce9e"><span id="vUp">0</span> %</span></label>
+          <input type="range" id="up" class="warn" min="0" max="80" value="0" step="5">
+        </div>
+      </div>
+
+      <div class="calc-right">
+        <div class="result-big">
+          <div class="cap">กำไรต่อจาน</div>
+          <div class="num" id="profitNum">24<span class="unit"> ฿</span></div>
+          <div class="margin-row">
+            <span class="pill" id="marginPill">มาร์จิน 40%</span>
+          </div>
+        </div>
+        <div class="break">
+          <div class="br"><span class="l"><span class="sw" style="background:#3ee6a0"></span>ราคาขาย</span><span class="r mono" id="bPrice">60 ฿</span></div>
+          <div class="br"><span class="l"><span class="sw" style="background:#f0883e"></span>ต้นทุนวัตถุดิบ</span><span class="r mono" id="bMat">−22 ฿</span></div>
+          <div class="br"><span class="l"><span class="sw" style="background:#4d8dff"></span>ค่าแรง + โสหุ้ย</span><span class="r mono" id="bLabor">−14 ฿</span></div>
+        </div>
+        <div class="alert" id="alert">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10.3 3.9 1.8 18a2 2 0 0 0 1.7 3h17a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0Z"/><path d="M12 9v4"/><path d="M12 17h.01"/></svg>
+          <span id="alertTxt">ของขึ้นราคา 30% — กำไรหายไป 7 ฿/จาน ควรพิจารณาปรับราคา</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- STEPS -->
+<section class="steps" id="how">
+  <div class="wrap">
+    <div class="sec-head reveal">
+      <div class="sec-tag"><span class="ln"></span> เริ่มง่ายใน 3 ขั้น</div>
+      <h2>ใช้ได้เลยวันนี้ ไม่ต้องเรียนรู้</h2>
+    </div>
+    <div class="step-grid">
+      <div class="step reveal">
+        <div class="no">1</div>
+        <h3>แอดไลน์ "ร้านรู้"</h3>
+        <p>สแกน QR หรือกดเพิ่มเพื่อน ตั้งชื่อร้านเสร็จใน 1 นาที ไม่ต้องดาวน์โหลดแอปอะไรเลย</p>
+        <span class="arrow"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m13 6 6 6-6 6"/></svg></span>
+      </div>
+      <div class="step reveal">
+        <div class="no">2</div>
+        <h3>พิมพ์ หรือถ่ายบิล</h3>
+        <p>ขายอะไร ซื้ออะไร พิมพ์บอกในไลน์ หรือถ่ายรูปบิลส่งไป ที่เหลือ AI จัดการลงบัญชีให้เอง</p>
+        <span class="arrow"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m13 6 6 6-6 6"/></svg></span>
+      </div>
+      <div class="step reveal">
+        <div class="no">3</div>
+        <h3>ดูสรุปกำไรทุกวัน</h3>
+        <p>สิ้นวันรับสรุปกำไร-ขาดทุนพร้อมกราฟ รู้ว่าวันนี้เหลือเท่าไร เมนูไหนทำเงิน เมนูไหนกินทุน</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- DELIVERY -->
+<section class="deliv" id="delivery">
+  <div class="wrap">
+    <div class="deliv-card reveal">
+      <div>
+        <div class="sec-tag" style="margin-bottom:10px"><span class="ln"></span> ฟีเจอร์เฉพาะคน</div>
+        <h2>ยอดเดลิเวอรี่เข้าระบบเอง ทุกวัน</h2>
+        <p>ไม่ต้องนั่งจดยอดจากแต่ละแอปทีละเจ้า ระบบดึงยอดขาย Grab / LineMan / Shopee Food มาให้อัตโนมัติ พร้อมหักค่า GP ให้เห็นกำไรสุทธิจริง ๆ อยากทดลองทักมาบอกได้เลย</p>
+      </div>
+      <div class="deliv-logos">
+        <div class="dlogo"><span class="ic" style="background:#00b14f">G</span><span class="nm">Grab</span><span class="auto"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>อัตโนมัติ</span></div>
+        <div class="dlogo"><span class="ic" style="background:#06c167">L</span><span class="nm">LineMan</span><span class="auto"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>อัตโนมัติ</span></div>
+        <div class="dlogo"><span class="ic" style="background:#ee4d2d">S</span><span class="nm">Shopee Food</span><span class="auto"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>อัตโนมัติ</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CTA -->
+<section class="cta" id="cta">
+  <div class="wrap">
+    <div class="cta-card reveal">
+      <h2>เริ่มรู้กำไรร้านคุณ ตั้งแต่วันนี้</h2>
+      <p>ใช้ฟรี ไม่ต้องลงแอป แค่แอดไลน์ก็เริ่มจดได้เลย เปลี่ยนการเดากำไรเป็นการรู้จริง</p>
+      <div class="cta-actions">
+        <a href="#" class="btn btn-line btn-lg">
+          <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 3C6.5 3 2 6.6 2 11c0 2.6 1.6 4.9 4 6.3-.2.7-.7 2.4-.8 2.8 0 0-.1.4.2.5s.5 0 .5 0c.4-.1 3-2 4-2.7.7.1 1.4.2 2.1.2 5.5 0 10-3.6 10-8S17.5 3 12 3Z"/></svg>
+          แอดไลน์ เริ่มใช้ฟรี
+        </a>
+        <a href="#features" class="btn btn-ghost btn-lg">ดูฟีเจอร์ทั้งหมด</a>
+      </div>
+      <div class="cta-note">ไม่มีค่าใช้จ่ายแอบแฝง • ยกเลิกได้ตลอด</div>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="wrap">
+    <div class="foot-grid">
+      <div>
+        <a href="#" class="brand">
+          <span class="logo"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 4h18"/><path d="M5 4v16a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V4"/><path d="M9 9h6"/><path d="M9 13h6"/><path d="M9 17h3"/></svg></span>
+          ร้านรู้
+        </a>
+        <p class="fdesc">บัญชีร้านอาหารที่จดให้เองผ่านไลน์ ให้เจ้าของร้านมีเวลาโฟกัสกับการขาย ไม่ใช่การจดบัญชี</p>
+      </div>
+      <div class="fcol"><h4>ผลิตภัณฑ์</h4><a href="#features">ฟีเจอร์</a><a href="#calc">คิดกำไรต่อจาน</a><a href="#delivery">ดึงยอดเดลิเวอรี่</a><a href="#how">วิธีใช้งาน</a></div>
+      <div class="fcol"><h4>ช่วยเหลือ</h4><a href="#">คำถามที่พบบ่อย</a><a href="#">ติดต่อทีมงาน</a><a href="#">คู่มือการใช้งาน</a></div>
+      <div class="fcol"><h4>บริษัท</h4><a href="#">เกี่ยวกับเรา</a><a href="#">นโยบายความเป็นส่วนตัว</a><a href="#">เงื่อนไขการใช้งาน</a></div>
+    </div>
+    <div class="foot-bottom">
+      <span>© 2026 ร้านรู้ • สร้างเพื่อเจ้าของร้านอาหารไทย</span>
+      <span>ทำด้วย ♥ ที่ประเทศไทย</span>
+    </div>
+  </div>
+</footer>
+
+<script>
+/* ---------- HERO CHAT ANIMATION ---------- */
+(function(){
+  const chat = document.getElementById('chat');
+  if(!chat) return;
+  const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  const script = [
+    {type:'me', delay:400, html:'ขายกะเพราหมู 5 จาน 300 บาท'},
+    {type:'typing', delay:600},
+    {type:'bot', delay:900, html:'บันทึกแล้ว ✅ รายรับ +300 ฿<br>(กะเพราหมู × 5)'},
+    {type:'photo', delay:800},
+    {type:'typing', delay:700},
+    {type:'ledger', delay:1100},
+  ];
+
+  function add(item){
+    if(item.type === 'typing'){
+      const t = document.createElement('div');
+      t.className = 'typing'; t.innerHTML = '<span></span><span></span><span></span>';
+      chat.appendChild(t);
+      setTimeout(()=>t.remove(), item.delay + 400);
+      return;
+    }
+    if(item.type === 'ledger'){
+      const c = document.createElement('div');
+      c.className = 'ledger-card';
+      c.innerHTML = `
+        <div class="lc-head"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 3v18h18"/><path d="m19 9-5 5-4-4-3 3"/></svg> สรุปวันนี้ • อ่านบิลแล้ว</div>
+        <div class="lc-row"><span>รายรับ (15 ออเดอร์)</span><b>+4,520 ฿</b></div>
+        <div class="lc-row"><span>ค่าวัตถุดิบ (จากบิล)</span><b>−1,280 ฿</b></div>
+        <div class="lc-row"><span>ค่าแรง + โสหุ้ย</span><b>−0 ฿</b></div>
+        <div class="lc-profit"><span class="lbl">กำไรสุทธิวันนี้</span><span class="val">+3,240 ฿</span></div>`;
+      chat.appendChild(c);
+      requestAnimationFrame(()=>c.classList.add('in'));
+      return;
+    }
+    const b = document.createElement('div');
+    if(item.type === 'photo'){
+      b.className = 'bubble photo';
+      b.innerHTML = '<div class="ph"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M14.5 4h-5L7 7H4a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2h-3l-2.5-3Z"/><circle cx="12" cy="13" r="3.5"/></svg></div>';
+    } else {
+      b.className = 'bubble ' + (item.type === 'me' ? 'me' : 'bot');
+      b.innerHTML = item.html;
+    }
+    chat.appendChild(b);
+    requestAnimationFrame(()=>b.classList.add('in'));
+  }
+
+  function run(){
+    chat.innerHTML='';
+    let t = 0;
+    script.forEach(item=>{
+      t += item.delay;
+      setTimeout(()=>add(item), t);
+    });
+    // loop
+    setTimeout(run, t + 4200);
+  }
+
+  if(reduce){
+    // static final state
+    add({type:'me', html:'ขายกะเพราหมู 5 จาน 300 บาท'});
+    add({type:'bot', html:'บันทึกแล้ว ✅ รายรับ +300 ฿'});
+    add({type:'ledger'});
+  } else {
+    run();
+  }
+})();
+
+/* ---------- PROFIT CALCULATOR ---------- */
+(function(){
+  const $ = id => document.getElementById(id);
+  const price=$('price'), mat=$('mat'), labor=$('labor'), up=$('up');
+  if(!price) return;
+
+  function fmt(n){ return Math.round(n).toLocaleString('th-TH'); }
+
+  function render(){
+    const p = +price.value, m0 = +mat.value, l = +labor.value, u = +up.value;
+    const m = m0 * (1 + u/100);
+    const profit = p - m - l;
+    const margin = p>0 ? (profit/p*100) : 0;
+
+    $('vPrice').textContent = p;
+    $('vMat').textContent = m0;
+    $('vLabor').textContent = l;
+    $('vUp').textContent = u;
+
+    const num = $('profitNum');
+    num.innerHTML = (profit<0?'−':'') + fmt(Math.abs(profit)) + '<span class="unit"> ฿</span>';
+    num.classList.toggle('neg', profit < 0);
+
+    const pill = $('marginPill');
+    pill.textContent = 'มาร์จิน ' + margin.toFixed(0) + '%';
+    pill.classList.toggle('neg', profit < 0);
+
+    $('bPrice').textContent = fmt(p) + ' ฿';
+    $('bMat').textContent = '−' + fmt(m) + ' ฿';
+    $('bLabor').textContent = '−' + fmt(l) + ' ฿';
+
+    const alert = $('alert');
+    if(u > 0){
+      const baseProfit = p - m0 - l;
+      const lost = baseProfit - profit;
+      $('alertTxt').textContent = `ของขึ้นราคา ${u}% — กำไรหายไป ${fmt(lost)} ฿/จาน` + (profit<0 ? ' • เมนูนี้เริ่มขาดทุนแล้ว!' : (margin<15?' • มาร์จินต่ำ ควรพิจารณาปรับราคา':''));
+      alert.classList.add('show');
+    } else {
+      alert.classList.remove('show');
+    }
+  }
+  [price,mat,labor,up].forEach(el=>el.addEventListener('input', render));
+  render();
+})();
+
+/* ---------- SCROLL REVEAL ---------- */
+(function(){
+  const els = document.querySelectorAll('.reveal');
+  if(!('IntersectionObserver' in window)){ els.forEach(e=>e.classList.add('show')); return; }
+  const io = new IntersectionObserver((entries)=>{
+    entries.forEach(e=>{ if(e.isIntersecting){ e.target.classList.add('show'); io.unobserve(e.target); } });
+  },{threshold:.12, rootMargin:'0px 0px -40px 0px'});
+  els.forEach(e=>io.observe(e));
+})();
+
+/* ---------- mobile nav open style ---------- */
+const st = document.createElement('style');
+st.textContent = '@media(max-width:980px){.nav-links.open{display:flex;position:absolute;top:66px;left:0;right:0;flex-direction:column;background:#fff;padding:10px 18px 16px;border-bottom:1px solid var(--border);box-shadow:var(--shadow-md)}.nav-links.open a{padding:12px 10px}}';
+document.head.appendChild(st);
+</script>
+</body>
+</html>
