@@ -120,7 +120,7 @@
   .trust-item svg{width:18px;height:18px;color:var(--profit)}
 
   /* phone mockup */
-  .phone-stage{position:relative;display:flex;justify-content:center;align-items:center;min-height:560px}
+  .phone-stage{position:relative;display:flex;justify-content:center;align-items:center;min-height:560px;max-width:300px;margin-inline:auto}
   .blob{position:absolute;inset:auto;z-index:0}
   .blob.b1{width:320px;height:320px;border-radius:46% 54% 60% 40%/52% 44% 56% 48%;
     background:linear-gradient(135deg,#4d8dff,#1f6bff);filter:blur(2px);opacity:.16;top:30px;right:30px;animation:float 9s ease-in-out infinite}
@@ -179,9 +179,9 @@
   .chip .ic svg{width:18px;height:18px}
   .chip .k{font-size:11px;color:var(--ink-faint);line-height:1.2}
   .chip .v{font-family:"Kanit";font-weight:700;font-size:15px;line-height:1.2}
-  .chip.c1{top:84px;left:-44px}
+  .chip.c1{top:56px;left:-58px}
   .chip.c1 .ic{background:var(--profit-soft);color:var(--profit)}
-  .chip.c2{bottom:120px;right:-40px;animation-delay:1.5s}
+  .chip.c2{bottom:135px;right:-40px;animation-delay:1.5s}
   .chip.c2 .ic{background:#e7efff;color:var(--blue)}
   @keyframes floatChip{0%,100%{transform:translateY(0)}50%{transform:translateY(-12px)}}
 
@@ -325,7 +325,7 @@
     .hero-sub{margin-left:auto;margin-right:auto}
     .hero-actions{justify-content:center}
     .hero-trust{justify-content:center}
-    .phone-stage{min-height:610px;max-width:520px;margin:16px auto 0}
+    .phone-stage{min-height:610px;margin:16px auto 0}
     .blob.b1{width:240px;height:240px;top:20px;right:0}
     .blob.b2{width:150px;height:150px;bottom:40px;left:0}
     .nav-links{display:none}
@@ -341,10 +341,6 @@
   @media(max-width:560px){
     .hero{padding:46px 0 20px}
     .phone-stage{transform:scale(.92);transform-origin:top center;margin-top:8px}
-    /* ป้ายลอย: เฉพาะมือถือ ให้โผล่ออกข้างขอบ ไม่ทับบับเบิล */
-    .chip{box-shadow:var(--shadow-md)}
-    .chip.c1{top:auto;bottom:215px;left:-18px}
-    .chip.c2{top:auto;bottom:78px;right:-18px}
     /* ปุ่ม hero เรียงซ้าย-ขวา */
     .hero-actions{flex-wrap:nowrap;gap:10px}
     .hero-actions .btn{flex:1;min-width:0;padding:14px 8px;font-size:14px;line-height:1.25}
