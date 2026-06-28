@@ -328,10 +328,9 @@
     .phone-stage{min-height:610px;max-width:340px;margin:16px auto 0}
     .blob.b1{width:240px;height:240px;top:20px;right:0}
     .blob.b2{width:150px;height:150px;bottom:40px;left:0}
-    .chip.c1{top:175px;left:0}
-    .chip.c2{bottom:150px;right:0}
+    .chip{display:none}
     .nav-links{display:none}
-    .nav-burger{display:flex}
+    .nav-burger{display:flex;margin-left:6px}
     .calc-card{grid-template-columns:1fr}
     .calc-right{border-left:none;border-top:1px solid rgba(255,255,255,.06)}
     .feat-grid{grid-template-columns:repeat(2,1fr)}
@@ -343,15 +342,22 @@
   @media(max-width:560px){
     .hero{padding:46px 0 20px}
     .phone-stage{transform:scale(.92);transform-origin:top center;margin-top:8px}
-    .chip{padding:8px 11px}
-    .chip .ic{width:30px;height:30px}
-    .chip .v{font-size:14px}
+    /* ปุ่ม hero เรียงซ้าย-ขวา */
+    .hero-actions{flex-wrap:nowrap;gap:10px}
+    .hero-actions .btn{flex:1;min-width:0;padding:14px 8px;font-size:14px;line-height:1.25}
+    .hero-actions .btn svg{width:16px;height:16px;flex:none}
+    /* ปุ่ม CTA บน header ให้เล็กลง สมมาตรกับปุ่มเมนู */
+    .nav-inner{height:60px;gap:10px}
+    .nav-cta{gap:8px}
+    .nav-cta .btn-ghost{display:none}
+    .nav-cta .btn-line{padding:9px 14px;font-size:13.5px;border-radius:10px}
+    .nav-cta .btn-line svg{width:15px;height:15px}
+    .nav-burger{width:40px;height:40px}
     .feat-grid{grid-template-columns:1fr}
     .calc-left,.calc-right{padding:30px 24px}
     .deliv-card{padding:30px 24px}
     .cta-card{padding:40px 24px}
     .foot-grid{grid-template-columns:1fr 1fr}
-    .nav-cta .btn-ghost{display:none}
   }
   @media(prefers-reduced-motion:reduce){
     *{animation:none!important;scroll-behavior:auto!important;transition:none!important}
