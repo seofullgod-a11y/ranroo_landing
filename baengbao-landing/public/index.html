@@ -328,7 +328,9 @@
     .phone-stage{min-height:610px;max-width:340px;margin:16px auto 0}
     .blob.b1{width:240px;height:240px;top:20px;right:0}
     .blob.b2{width:150px;height:150px;bottom:40px;left:0}
-    .chip{display:none}
+    .chip{box-shadow:var(--shadow-md)}
+    .chip.c1{top:auto;bottom:158px;left:8px}
+    .chip.c2{top:auto;bottom:74px;right:8px}
     .nav-links{display:none}
     .nav-burger{display:flex;margin-left:6px}
     .calc-card{grid-template-columns:1fr}
@@ -355,8 +357,18 @@
     .nav-burger{width:40px;height:40px}
     .feat-grid{grid-template-columns:1fr}
     .calc-left,.calc-right{padding:30px 24px}
-    .deliv-card{padding:30px 24px}
-    .cta-card{padding:40px 24px}
+    /* เดลิเวอรี่ 3 อันแถวเดียว */
+    .deliv-card{padding:28px 18px}
+    .deliv-logos{flex-wrap:nowrap;gap:8px}
+    .dlogo{min-width:0;flex:1;padding:14px 6px}
+    .dlogo .ic{width:36px;height:36px}
+    .dlogo .nm{font-size:13px}
+    .dlogo .auto{font-size:10px}
+    /* ปุ่ม CTA ท้ายหน้า เรียงซ้าย-ขวา */
+    .cta-card{padding:40px 22px}
+    .cta-actions{flex-wrap:nowrap;gap:10px}
+    .cta-actions .btn{flex:1;min-width:0;padding:14px 8px;font-size:14px;line-height:1.25}
+    .cta-actions .btn svg{width:16px;height:16px;flex:none}
     .foot-grid{grid-template-columns:1fr 1fr}
   }
   @media(prefers-reduced-motion:reduce){
