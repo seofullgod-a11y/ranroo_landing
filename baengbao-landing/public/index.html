@@ -7,8 +7,20 @@
 <title>แบ่งเบา — ผู้ช่วยบัญชีร้านอาหาร จดให้เองผ่านไลน์</title>
 <meta name="description" content="จดรายรับ-รายจ่ายร้านอาหารแค่พิมพ์ในไลน์ หรือถ่ายรูปบิล AI อ่านให้เอง ดึงยอด Grab/LineMan/Shopee อัตโนมัติ รู้กำไรต่อจานทันที สรุปกำไร-ขาดทุนพร้อมกราฟ" />
 <meta property="og:title" content="แบ่งเบา — ผู้ช่วยบัญชีร้านอาหาร จดให้เองผ่านไลน์" />
-<meta property="og:description" content="พิมพ์ในไลน์ ถ่ายบิล AI จดให้ รู้กำไรต่อจานทันที" />
+<meta property="og:description" content="แค่พิมพ์ พูด หรือถ่ายรูปบิลในไลน์ AI จดให้ รู้กำไรต่อจานทันที สรุปกำไร-ขาดทุนพร้อมกราฟ" />
 <meta property="og:type" content="website" />
+<meta property="og:url" content="https://baengbao.com/" />
+<meta property="og:image" content="https://baengbao.com/og.png" />
+<meta property="og:image:width" content="1200" />
+<meta property="og:image:height" content="630" />
+<meta property="og:locale" content="th_TH" />
+<meta property="og:site_name" content="แบ่งเบา" />
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:title" content="แบ่งเบา — ผู้ช่วยบัญชีร้านอาหาร จดให้เองผ่านไลน์" />
+<meta name="twitter:description" content="แค่พิมพ์ พูด หรือถ่ายรูปบิลในไลน์ รู้กำไรต่อจานทันที" />
+<meta name="twitter:image" content="https://baengbao.com/og.png" />
+<meta name="theme-color" content="#1f6bff" />
+<link rel="canonical" href="https://baengbao.com/" />
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@500;600;700;800&family=IBM+Plex+Sans+Thai:wght@400;500;600;700&family=IBM+Plex+Mono:wght@500;600&display=swap" rel="stylesheet" />
@@ -427,6 +439,29 @@
     .reveal{opacity:1;transform:none}
     .bubble,.ledger-card{opacity:1;transform:none}
   }
+  /* ----- pricing ----- */
+  .price{padding:80px 0;background:var(--bg-tint)}
+  .price-grid{display:grid;grid-template-columns:1fr 1fr;gap:24px;max-width:840px;margin:40px auto 0}
+  .plan{background:#fff;border:1.5px solid var(--border);border-radius:var(--r-lg);padding:32px 28px;position:relative;box-shadow:var(--shadow-sm)}
+  .plan.pro{border-color:var(--blue);box-shadow:var(--shadow-md)}
+  .plan .ptag{font-family:"Kanit";font-weight:700;font-size:15px;color:var(--ink-soft);letter-spacing:.3px}
+  .plan.pro .ptag{color:var(--blue)}
+  .plan .best{position:absolute;top:-13px;right:24px;background:var(--blue);color:#fff;font-family:"Kanit";font-weight:600;font-size:12.5px;padding:5px 14px;border-radius:20px}
+  .plan .pcost{font-family:"Kanit";font-weight:800;font-size:42px;color:var(--ink);margin:10px 0 2px}
+  .plan .pcost small{font-size:17px;font-weight:600;color:var(--ink-faint)}
+  .plan .psub{color:var(--ink-soft);font-size:14px;margin-bottom:18px}
+  .plan ul{list-style:none;display:flex;flex-direction:column;gap:11px;margin:18px 0 24px}
+  .plan li{display:flex;gap:10px;align-items:flex-start;font-size:14.5px;color:var(--ink);line-height:1.4}
+  .plan li svg{width:19px;height:19px;color:var(--profit);flex:none;margin-top:1px}
+  .plan .btn{width:100%;justify-content:center}
+  .price-note{text-align:center;color:var(--ink-faint);font-size:13px;margin-top:18px}
+  /* ----- cta qr ----- */
+  .cta-qr{display:flex;align-items:center;gap:18px;justify-content:center;margin-top:26px;flex-wrap:wrap}
+  .cta-qr img{width:124px;height:124px;border-radius:14px;background:#fff;padding:9px;box-shadow:var(--shadow-md)}
+  .cta-qr .qt{text-align:left}
+  .cta-qr .qt b{font-family:"Kanit";font-weight:600;font-size:16px;color:#fff;display:block}
+  .cta-qr .qt span{font-size:13.5px;color:rgba(255,255,255,.82)}
+  @media(max-width:640px){.price-grid{grid-template-columns:1fr}.cta-qr{flex-direction:column;gap:12px}.cta-qr .qt{text-align:center}}
 </style>
 </head>
 <body>
@@ -442,6 +477,7 @@
       <a href="#features">ฟีเจอร์</a>
       <a href="#calc">คิดกำไรต่อจาน</a>
       <a href="#how">วิธีใช้</a>
+      <a href="#pricing">ราคา</a>
       <a href="#delivery">เดลิเวอรี่</a>
     </nav>
     <div class="nav-cta">
@@ -461,7 +497,7 @@
 <section class="hero">
   <div class="wrap hero-grid">
     <div class="hero-copy">
-      <span class="eyebrow"><span class="dot"></span> บัญชีร้านอาหารยุคใหม่ • ไม่ต้องจดมือ</span>
+      <span class="eyebrow"><span class="dot"></span> บัญชีร้านอาหารในไลน์ • พิมพ์ พูด หรือถ่ายรูป</span>
       <h1 class="hero-title">เลิกจดมือ<br>เลิก<span class="hl">เดากำไร</span><br>แค่พิมพ์ในไลน์</h1>
       <p class="hero-sub">จดรายรับ-รายจ่ายแค่พิมพ์ในไลน์ หรือถ่ายรูปบิลให้ AI อ่านให้เอง รู้กำไรต่อจานทันที สรุปกำไร-ขาดทุนรายวัน/รายเดือนพร้อมกราฟ ครบในที่เดียว</p>
       <div class="hero-actions">
@@ -473,6 +509,11 @@
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 17V9"/><path d="M13 17V5"/><path d="M5 17v-3"/></svg>
           ลองคิดกำไรต่อจาน
         </a>
+      </div>
+      <div class="hero-ways" style="display:flex;gap:10px;flex-wrap:wrap;margin-top:18px">
+        <span style="display:inline-flex;align-items:center;gap:8px;background:#fff;border:1.5px solid var(--border);border-radius:30px;padding:9px 16px;font-weight:600;font-size:14.5px;color:var(--ink);box-shadow:var(--shadow-sm)">⌨️ พิมพ์</span>
+        <span style="display:inline-flex;align-items:center;gap:8px;background:linear-gradient(135deg,#e8fff6,#d2f7e8);border:1.5px solid #9fe7c8;border-radius:30px;padding:9px 16px;font-weight:700;font-size:14.5px;color:#067a4e;box-shadow:var(--shadow-sm)">🎤 พูดก็ได้ <span style="background:#00a86b;color:#fff;font-size:10.5px;padding:2px 7px;border-radius:20px;font-weight:700">ใหม่</span></span>
+        <span style="display:inline-flex;align-items:center;gap:8px;background:#fff;border:1.5px solid var(--border);border-radius:30px;padding:9px 16px;font-weight:600;font-size:14.5px;color:var(--ink);box-shadow:var(--shadow-sm)">📸 ถ่ายรูปบิล</span>
       </div>
       <div class="hero-trust">
         <span class="trust-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg> ใช้ฟรี ไม่ต้องลงแอป</span>
@@ -557,6 +598,22 @@
         <div class="fi"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 3v18h18"/><rect x="7" y="11" width="3" height="6" rx="1"/><rect x="12" y="7" width="3" height="10" rx="1"/><rect x="17" y="13" width="3" height="4" rx="1"/></svg></div>
         <h3>สรุปกำไร-ขาดทุน พร้อมกราฟ</h3>
         <p>ดูภาพรวมรายวัน/รายเดือนเป็นกราฟอ่านง่าย รู้ทันทีว่าวันไหนกำไรดี เดือนไหนต้องระวัง</p>
+      </div>
+      <div class="feat reveal">
+        <span class="badge">ใหม่</span>
+        <div class="fi"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2a3 3 0 0 0-3 3v6a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3Z"/><path d="M19 10a7 7 0 0 1-14 0"/><path d="M12 17v4"/></svg></div>
+        <h3>พูดก็ได้ ไม่ต้องพิมพ์</h3>
+        <p>พิมพ์ไม่ถนัด? พูดใส่ไลน์ว่า "ขายข้าว 50 บาท" บอทถอดเสียงจดให้เลย เหมาะกับพ่อค้าแม่ค้าที่มือไม่ว่างหรือไม่ชอบพิมพ์</p>
+      </div>
+      <div class="feat reveal">
+        <div class="fi"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 3v18h18"/><path d="M7 14l3-3 3 3 4-5"/><circle cx="17" cy="9" r="0.5" fill="currentColor"/></svg></div>
+        <h3>งบกำไร-ขาดทุน + จุดคุ้มทุน</h3>
+        <p>รู้ว่าเดือนนี้เหลือเก็บเท่าไหร่จริง ๆ และต้องขายวันละเท่าไหร่ถึงไม่ขาดทุน ตัดสินใจได้บนตัวเลขจริง ไม่ใช่ความรู้สึก</p>
+      </div>
+      <div class="feat reveal">
+        <div class="fi"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 3v4a1 1 0 0 0 1 1h4"/><path d="M17 21H7a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h7l5 5v11a2 2 0 0 1-2 2Z"/><path d="m9 12 2 3 2-3"/><path d="M9 15h4"/></svg></div>
+        <h3>ออกไฟล์ Excel ส่งบัญชี</h3>
+        <p>ดาวน์โหลดรายงานรายเดือนเป็นไฟล์ Excel พร้อมงบกำไร-ขาดทุน ส่งให้นักบัญชีหรือใช้ยื่นภาษีได้ทันที</p>
       </div>
     </div>
   </div>
@@ -733,6 +790,48 @@
   </div>
 </section>
 
+<!-- PRICING -->
+<section class="price" id="pricing">
+  <div class="wrap">
+    <div class="sec-head reveal">
+      <div class="sec-tag"><span class="ln"></span> ราคา</div>
+      <h2>เริ่มฟรี ใช้ได้จริงทุกฟีเจอร์</h2>
+      <p>เริ่มต้นฟรีไม่มีค่าใช้จ่าย ไม่ต้องผูกบัตร อัปเกรดเมื่อร้านโตขึ้นเท่านั้น</p>
+    </div>
+    <div class="price-grid">
+      <div class="plan reveal">
+        <div class="ptag">ฟรี</div>
+        <div class="pcost">฿0<small> / ตลอดไป</small></div>
+        <div class="psub">เหมาะกับร้านเล็ก-กลาง เริ่มจดวันนี้ได้เลย</div>
+        <ul>
+          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg> จดด้วยพิมพ์ พูด หรือถ่ายรูปบิล</li>
+          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg> ยอดวันนี้ / ทั้งเดือน + กราฟ</li>
+          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg> กำไรต่อจาน + จุดคุ้มทุน + งบกำไร-ขาดทุน</li>
+          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg> ออกไฟล์ Excel ส่งบัญชี</li>
+          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg> ใช้ AI จด/อ่านบิลได้ทุกวัน</li>
+        </ul>
+        <a href="https://line.me/R/ti/p/@952dxvdb" target="_blank" rel="noopener" class="btn btn-line btn-lg">เริ่มใช้ฟรี</a>
+      </div>
+      <div class="plan pro reveal">
+        <span class="best">แนะนำเมื่อร้านโต</span>
+        <div class="ptag">Pro</div>
+        <!-- TODO: ตั้งราคา Pro จริงตรงนี้ เช่น ฿99 / เดือน -->
+        <div class="pcost">ราคาพิเศษ<small> ช่วงเปิดตัว</small></div>
+        <div class="psub">สำหรับร้านที่จดเยอะทุกวัน หรือมีหลายคนช่วยจด</div>
+        <ul>
+          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg> ทุกอย่างในแพ็กฟรี</li>
+          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg> ใช้ AI จด/อ่านบิลได้มากขึ้นหลายเท่า</li>
+          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg> เพิ่มพนักงานช่วยจดเข้าบัญชีเดียวกัน</li>
+          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg> รองรับร้านที่ออเดอร์เยอะทุกวัน</li>
+          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg> ดูแลใกล้ชิดจากทีมงาน</li>
+        </ul>
+        <a href="https://line.me/R/ti/p/@952dxvdb" target="_blank" rel="noopener" class="btn btn-line btn-lg">ทักไลน์เพื่ออัปเกรด</a>
+      </div>
+    </div>
+    <p class="price-note">เริ่มฟรีได้เลย ไม่ต้องกรอกบัตร • อัปเกรด/ยกเลิกได้ตลอด</p>
+  </div>
+</section>
+
 <section class="cta" id="cta">
   <div class="wrap">
     <div class="cta-card reveal">
@@ -746,6 +845,10 @@
         <a href="#features" class="btn btn-ghost btn-lg">ดูฟีเจอร์ทั้งหมด</a>
       </div>
       <div class="cta-note">ไม่มีค่าใช้จ่ายแอบแฝง • ยกเลิกได้ตลอด</div>
+      <div class="cta-qr">
+        <img src="line-qr.png" alt="QR แอดไลน์แบ่งเบา" />
+        <div class="qt"><b>สแกนเพื่อแอดไลน์</b><span>เปิดกล้องหรือไลน์ สแกน QR นี้<br>แล้วเริ่มจดได้เลย</span></div>
+      </div>
     </div>
   </div>
 </section>
@@ -761,7 +864,7 @@
         </a>
         <p class="fdesc">บัญชีร้านอาหารที่จดให้เองผ่านไลน์ ให้เจ้าของร้านมีเวลาโฟกัสกับการขาย ไม่ใช่การจดบัญชี</p>
       </div>
-      <div class="fcol"><h4>ผลิตภัณฑ์</h4><a href="#features">ฟีเจอร์</a><a href="#calc">คิดกำไรต่อจาน</a><a href="#delivery">ดึงยอดเดลิเวอรี่</a><a href="#how">วิธีใช้งาน</a></div>
+      <div class="fcol"><h4>ผลิตภัณฑ์</h4><a href="#features">ฟีเจอร์</a><a href="#pricing">ราคา</a><a href="#calc">คิดกำไรต่อจาน</a><a href="#delivery">ดึงยอดเดลิเวอรี่</a><a href="#how">วิธีใช้งาน</a></div>
       <div class="fcol"><h4>ช่วยเหลือ</h4><a href="#faq">คำถามที่พบบ่อย</a><a href="https://line.me/R/ti/p/@952dxvdb" target="_blank" rel="noopener">ติดต่อทีมงาน</a><a href="#how">คู่มือการใช้งาน</a></div>
       <div class="fcol"><h4>บริษัท</h4><a href="#cases">เหมาะกับใคร</a><a href="/privacy">นโยบายความเป็นส่วนตัว</a><a href="/terms">เงื่อนไขการใช้งาน</a></div>
     </div>
@@ -780,9 +883,10 @@
   const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
   const script = [
-    {type:'me', delay:400, html:'ขายกะเพราหมู 5 จาน 300 บาท'},
+    {type:'voice', delay:500},
     {type:'typing', delay:600},
-    {type:'bot', delay:900, html:'บันทึกแล้ว ✅ รายรับ +300 ฿<br>(กะเพราหมู × 5)'},
+    {type:'bot', delay:800, html:'🎤 ได้ยินว่า: ขายกะเพราหมู 5 จาน 300 บาท'},
+    {type:'bot', delay:700, html:'บันทึกแล้ว ✅ รายรับ +300 ฿<br>(กะเพราหมู × 5)'},
     {type:'photo', delay:800},
     {type:'typing', delay:700},
     {type:'ledger', delay:1100},
@@ -810,6 +914,13 @@
       return;
     }
     const b = document.createElement('div');
+    if(item.type === 'voice'){
+      b.className = 'bubble me voice';
+      b.innerHTML = '<span style="display:inline-flex;align-items:center;gap:8px"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2a3 3 0 0 0-3 3v6a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3Z"/><path d="M19 10a7 7 0 0 1-14 0"/><path d="M12 17v4"/></svg><span style="display:inline-flex;gap:2px;align-items:center"><i style="width:3px;height:7px;background:currentColor;border-radius:2px;display:block"></i><i style="width:3px;height:14px;background:currentColor;border-radius:2px;display:block"></i><i style="width:3px;height:20px;background:currentColor;border-radius:2px;display:block"></i><i style="width:3px;height:10px;background:currentColor;border-radius:2px;display:block"></i><i style="width:3px;height:15px;background:currentColor;border-radius:2px;display:block"></i></span><span style="font-size:12px;opacity:.85">0:03</span></span>';
+      chat.appendChild(b);
+      requestAnimationFrame(()=>b.classList.add('in'));
+      return;
+    }
     if(item.type === 'photo'){
       b.className = 'bubble photo';
       b.innerHTML = '<div class="ph"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M14.5 4h-5L7 7H4a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2h-3l-2.5-3Z"/><circle cx="12" cy="13" r="3.5"/></svg></div>';
