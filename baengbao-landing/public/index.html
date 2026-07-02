@@ -514,6 +514,10 @@
   :root[data-theme="dark"] .way{background:var(--card)}
   :root[data-theme="dark"] .way-hl{background:linear-gradient(135deg,#15352a,#123a2c);border-color:#1f6b4e;color:#4fe0a8}
   :root[data-theme="dark"] .strip .pf{color:var(--ink-soft)}
+  :root[data-theme="dark"] .features{background:linear-gradient(180deg,var(--bg),var(--bg-tint))}
+  :root[data-theme="dark"] .cta{background:var(--bg)}
+  :root[data-theme="dark"] .chip{background:var(--card);border-color:var(--border)}
+  :root[data-theme="dark"] .nav-burger{background:var(--card)}
   :root[data-theme="dark"] .deliv-card{background:linear-gradient(135deg,#16203a,#1a2748)}
   :root[data-theme="dark"] .faq-item,
   :root[data-theme="dark"] .faq-q,
@@ -532,7 +536,7 @@
   (function(){
     try{
       var saved = localStorage.getItem('bb_theme');
-      var dark = saved ? saved === 'dark' : window.matchMedia('(prefers-color-scheme: dark)').matches;
+      var dark = saved === 'dark';   // ค่าเริ่มต้น = โหมดสว่าง (ต้องกดปุ่มเองถึงจะเป็นมืด)
       if(dark) document.documentElement.setAttribute('data-theme','dark');
     }catch(e){}
   })();
