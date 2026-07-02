@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<meta name="robots" content="noindex" />
+<title>แอดมิน — แบ่งเบา Landing</title>
+<link href="https://fonts.googleapis.com/css2?family=Kanit:wght@500;600;700&family=IBM+Plex+Sans+Thai:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{--blue:#1f6bff;--blue-deep:#0b49c9;--green:#00a86b;--ink:#0a1f44;--soft:#67789a;--border:#dce7fb;--bg:#f6f9ff;--danger:#e5484d}
+  *{margin:0;padding:0;box-sizing:border-box}
+  body{font-family:"IBM Plex Sans Thai",sans-serif;background:var(--bg);color:var(--ink);min-height:100vh;display:flex;align-items:flex-start;justify-content:center;padding:40px 16px}
+  .card{background:#fff;border:1px solid var(--border);border-radius:18px;padding:26px;width:100%;max-width:520px;box-shadow:0 10px 30px rgba(31,107,255,.08)}
+  h1{font-family:Kanit;font-size:20px;margin-bottom:4px}
+  .sub{font-size:13.5px;color:var(--soft);margin-bottom:18px}
+  input[type=password]{width:100%;border:1px solid var(--border);border-radius:10px;padding:12px;font-family:inherit;font-size:14px;margin-bottom:10px}
+  .btn{width:100%;background:var(--blue);color:#fff;border:none;border-radius:10px;padding:12px;font-family:Kanit;font-weight:600;font-size:15px;cursor:pointer}
+  .btn:disabled{opacity:.5;cursor:default}
+  .err{color:var(--danger);font-size:13px;margin-top:8px;display:none}
+  .logos{display:flex;gap:16px;align-items:center;margin:14px 0}
+  .lbox{flex:1;text-align:center}
+  .lbox p{font-size:12.5px;color:var(--soft);margin-bottom:6px}
+  .lbox .imgwrap{background:var(--bg);border:1px solid var(--border);border-radius:14px;padding:14px;display:grid;place-items:center;min-height:110px}
+  .lbox img{width:80px;height:80px;object-fit:cover;border-radius:16px}
+  .arrow{font-size:20px;color:var(--soft);flex:none}
+  input[type=file]{margin:6px 0 12px;font-size:13.5px}
+  .note{font-size:12.5px;color:var(--soft);background:var(--bg);border:1px solid var(--border);border-radius:10px;padding:10px 12px;line-height:1.6;margin-top:14px}
+  .status{font-size:13.5px;margin-top:10px}
+  .hide{display:none}
+</style>
+</head>
+<body>
+<div class="card">
+  <h1>🖼 เปลี่ยนโลโก้เว็บ</h1>
+  <p class="sub">แบ่งเบา · baengbao.com</p>
+
+  <div id="gate">
+    <input id="keyInput" type="password" placeholder="ADMIN_KEY" />
+    <button class="btn" id="enterBtn">เข้าสู่ระบบ</button>
+    <p class="err" id="gateErr"></p>
+  </div>
+
+  <div id="panel" class="hide">
+    <div class="logos">
+      <div class="lbox"><p>โลโก้ปัจจุบัน</p><div class="imgwrap"><img id="curLogo" src="/logo.png" alt="ปัจจุบัน"></div></div>
+      <div class="arrow">→</div>
+      <div class="lbox"><p>โลโก้ใหม่</p><div class="imgwrap"><img id="newLogo" alt="" style="display:none"><span id="newPh" style="color:#b7c4dd;font-size:13px">ยังไม่เลือก</span></div></div>
+    </div>
+    <input type="file" id="logoFile" accept="image/png,image/jpeg,image/webp" />
+    <button class="btn" id="uploadBtn" disabled>อัปโหลด &amp; ใช้เลย</button>
+    <p class="status" id="status"></p>
+    <div class="note">
+      💡 แนะนำ PNG จัตุรัส (เช่น 512×512) ไม่เกิน 2MB<br>
+      ⚠️ รูปที่อัปโหลดจะ<b>หายเมื่อ redeploy</b> (ระบบไฟล์ของ Railway เป็นแบบชั่วคราว) — ถ้าอยากให้ถาวร ให้เอาไฟล์เดียวกันไปแทนที่ <b>public/logo.png</b> ใน GitHub ด้วย
+    </div>
+  </div>
+</div>
+<script>
+  const $=id=>document.getElementById(id);
+  let KEY='';
+  let blob=null, btype='image/png';
+
+  $('enterBtn').addEventListener('click',async()=>{
+    KEY=$('keyInput').value.trim();
+    if(!KEY) return;
+    try{
+      const r=await fetch('/admin/api/check',{headers:{'x-admin-key':KEY}});
+      const d=await r.json().catch(()=>({}));
+      if(!r.ok) throw new Error(d.error||('error '+r.status));
+      $('gate').classList.add('hide');$('panel').classList.remove('hide');
+    }catch(e){ $('gateErr').textContent=e.message;$('gateErr').style.display='block'; }
+  });
+  $('keyInput').addEventListener('keydown',e=>{if(e.key==='Enter')$('enterBtn').click();});
+
+  $('logoFile').addEventListener('change',()=>{
+    blob=null;$('uploadBtn').disabled=true;$('status').textContent='';
+    const f=$('logoFile').files&&$('logoFile').files[0];
+    if(!f){$('newLogo').style.display='none';$('newPh').style.display='';return;}
+    if(!/image\/(png|jpeg|webp)/.test(f.type)){$('status').innerHTML='<b style="color:#e5484d">ต้องเป็น PNG / JPEG / WebP</b>';return;}
+    if(f.size>2*1024*1024){$('status').innerHTML='<b style="color:#e5484d">ไฟล์เกิน 2MB</b>';return;}
+    const url=URL.createObjectURL(f);
+    $('newLogo').src=url;$('newLogo').style.display='';$('newPh').style.display='none';
+    blob=f;btype=f.type;$('uploadBtn').disabled=false;
+  });
+
+  $('uploadBtn').addEventListener('click',async()=>{
+    if(!blob)return;
+    $('uploadBtn').disabled=true;$('status').textContent='กำลังอัปโหลด...';
+    try{
+      const r=await fetch('/admin/api/logo',{method:'POST',headers:{'Content-Type':btype,'x-admin-key':KEY},body:blob});
+      const d=await r.json().catch(()=>({}));
+      if(!r.ok) throw new Error(d.error||('error '+r.status));
+      $('status').innerHTML='<b style="color:#00a86b">✓ สำเร็จ! โลโก้ใหม่ขึ้นเว็บแล้ว</b>';
+      $('curLogo').src='/logo.png?t='+Date.now();
+    }catch(e){ $('status').innerHTML='<b style="color:#e5484d">✗ '+String(e.message).replace(/</g,'&lt;')+'</b>';$('uploadBtn').disabled=false; }
+  });
+</script>
+</body>
+</html>
