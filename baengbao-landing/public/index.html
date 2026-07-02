@@ -462,7 +462,89 @@
   .cta-qr .qt b{font-family:"Kanit";font-weight:600;font-size:16px;color:#fff;display:block}
   .cta-qr .qt span{font-size:13.5px;color:rgba(255,255,255,.82)}
   @media(max-width:640px){.price-grid{grid-template-columns:1fr}.cta-qr{flex-direction:column;gap:12px}.cta-qr .qt{text-align:center}}
+  /* ----- hero ways pills ----- */
+  .hero-ways{display:flex;gap:10px;flex-wrap:wrap;margin-top:18px}
+  .way{display:inline-flex;align-items:center;gap:8px;background:var(--card);border:1.5px solid var(--border);border-radius:30px;padding:9px 16px;font-weight:600;font-size:14.5px;color:var(--ink);box-shadow:var(--shadow-sm)}
+  .way-hl{background:linear-gradient(135deg,#e8fff6,#d2f7e8);border-color:#9fe7c8;color:#067a4e;font-weight:700}
+  .wnew{background:#00a86b;color:#fff;font-size:10.5px;padding:2px 7px;border-radius:20px;font-weight:700}
+
+  /* ----- theme toggle ----- */
+  .theme-btn{width:40px;height:40px;border-radius:11px;border:1px solid var(--border);background:var(--card);color:var(--ink-soft);display:grid;place-items:center;cursor:pointer;transition:.2s;flex:none}
+  .lang-btn{height:40px;min-width:44px;padding:0 12px;border-radius:11px;border:1px solid var(--border);background:var(--card);color:var(--ink-soft);font-family:"Kanit";font-weight:600;font-size:14px;cursor:pointer;transition:.2s;flex:none}
+  .lang-btn:hover{color:var(--blue);border-color:var(--blue-bright)}
+  .theme-btn:hover{color:var(--blue);border-color:var(--blue-bright)}
+  .theme-btn svg{width:20px;height:20px}
+  .theme-btn .moon{display:none}
+  :root[data-theme="dark"] .theme-btn .sun{display:none}
+  :root[data-theme="dark"] .theme-btn .moon{display:block}
+  html{transition:background .3s ease}
+  body,.feat,.plan,.step,.dlogo,.chip,header.nav,.eyebrow,.way,.faq-q,.faq-item,.case-card,.theme-btn{transition:background .3s ease,border-color .3s ease,color .3s ease}
+
+  /* ===================== DARK MODE ===================== */
+  :root[data-theme="dark"]{
+    --bg:#0d1424;
+    --bg-soft:#141d31;
+    --bg-tint:#111a2b;
+    --ink:#e9eefc;
+    --ink-soft:#a7b8d6;
+    --ink-faint:#7286a8;
+    --blue:#4d8dff;
+    --blue-deep:#7fb0ff;
+    --blue-bright:#6aa0ff;
+    --sky:#2b3a5c;
+    --sky-soft:#1b2740;
+    --border:#26324c;
+    --card:#161f33;
+    --profit:#1fce8e;
+    --profit-soft:#0f2a22;
+    --shadow-sm:0 1px 3px rgba(0,0,0,.4);
+    --shadow-md:0 12px 30px -12px rgba(0,0,0,.6);
+    --shadow-lg:0 40px 80px -30px rgba(0,0,0,.7);
+  }
+  :root[data-theme="dark"] body{background:var(--bg)}
+  :root[data-theme="dark"] header.nav{background:rgba(13,20,36,.85);border-bottom-color:var(--border)}
+  :root[data-theme="dark"] .eyebrow{background:var(--card)}
+  :root[data-theme="dark"] .calc{background:var(--bg)}
+  :root[data-theme="dark"] .deliv{background:var(--bg)}
+  :root[data-theme="dark"] .step{background:var(--card)}
+  :root[data-theme="dark"] .dlogo{background:#1d2840}
+  :root[data-theme="dark"] .plan{background:var(--card)}
+  :root[data-theme="dark"] .feat .fi{background:linear-gradient(140deg,#1c2945,#22304f);color:var(--blue-deep)}
+  :root[data-theme="dark"] .feat .badge{background:#3a2a17;border-color:#5a3f20;color:#ffb15c}
+  :root[data-theme="dark"] .way{background:var(--card)}
+  :root[data-theme="dark"] .way-hl{background:linear-gradient(135deg,#15352a,#123a2c);border-color:#1f6b4e;color:#4fe0a8}
+  :root[data-theme="dark"] .strip .pf{color:var(--ink-soft)}
+  :root[data-theme="dark"] .deliv-card{background:linear-gradient(135deg,#16203a,#1a2748)}
+  :root[data-theme="dark"] .faq-item,
+  :root[data-theme="dark"] .faq-q,
+  :root[data-theme="dark"] .case-card,
+  :root[data-theme="dark"] .cases-head{background:var(--card)}
+  :root[data-theme="dark"] .nav-links a{color:var(--ink-soft)}
+  :root[data-theme="dark"] .btn-ghost{background:var(--card);color:var(--ink);border-color:var(--border)}
+  :root[data-theme="dark"] .cta-qr img,
+  :root[data-theme="dark"] .dlogo,
+  :root[data-theme="dark"] .plan .btn-line{}
+  :root[data-theme="dark"] .sec-head p,
+  :root[data-theme="dark"] .hero-sub{color:var(--ink-soft)}
 </style>
+<script>
+  // ตั้งธีมก่อน render กัน flash
+  (function(){
+    try{
+      var saved = localStorage.getItem('bb_theme');
+      var dark = saved ? saved === 'dark' : window.matchMedia('(prefers-color-scheme: dark)').matches;
+      if(dark) document.documentElement.setAttribute('data-theme','dark');
+    }catch(e){}
+  })();
+  function toggleTheme(){
+    var el = document.documentElement;
+    var dark = el.getAttribute('data-theme') === 'dark';
+    if(dark){ el.removeAttribute('data-theme'); try{localStorage.setItem('bb_theme','light')}catch(e){} }
+    else { el.setAttribute('data-theme','dark'); try{localStorage.setItem('bb_theme','dark')}catch(e){} }
+    var m = document.querySelector('meta[name="theme-color"]');
+    if(m) m.setAttribute('content', dark ? '#1f6bff' : '#0d1424');
+  }
+</script>
 </head>
 <body>
 
@@ -481,6 +563,11 @@
       <a href="#delivery">เดลิเวอรี่</a>
     </nav>
     <div class="nav-cta">
+      <button class="lang-btn" id="langBtn" aria-label="Switch language" onclick="toggleLang()">EN</button>
+      <button class="theme-btn" id="themeBtn" aria-label="สลับโหมดมืด/สว่าง" onclick="toggleTheme()">
+        <svg class="sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg>
+        <svg class="moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8Z"/></svg>
+      </button>
       <a href="#" class="btn btn-ghost">เข้าสู่ระบบ</a>
       <a href="https://line.me/R/ti/p/@952dxvdb" target="_blank" rel="noopener" class="btn btn-line">
         <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 3C6.5 3 2 6.6 2 11c0 2.6 1.6 4.9 4 6.3-.2.7-.7 2.4-.8 2.8 0 0-.1.4.2.5s.5 0 .5 0c.4-.1 3-2 4-2.7.7.1 1.4.2 2.1.2 5.5 0 10-3.6 10-8S17.5 3 12 3Z"/></svg>
@@ -510,10 +597,10 @@
           ลองคิดกำไรต่อจาน
         </a>
       </div>
-      <div class="hero-ways" style="display:flex;gap:10px;flex-wrap:wrap;margin-top:18px">
-        <span style="display:inline-flex;align-items:center;gap:8px;background:#fff;border:1.5px solid var(--border);border-radius:30px;padding:9px 16px;font-weight:600;font-size:14.5px;color:var(--ink);box-shadow:var(--shadow-sm)">⌨️ พิมพ์</span>
-        <span style="display:inline-flex;align-items:center;gap:8px;background:linear-gradient(135deg,#e8fff6,#d2f7e8);border:1.5px solid #9fe7c8;border-radius:30px;padding:9px 16px;font-weight:700;font-size:14.5px;color:#067a4e;box-shadow:var(--shadow-sm)">🎤 พูดก็ได้ <span style="background:#00a86b;color:#fff;font-size:10.5px;padding:2px 7px;border-radius:20px;font-weight:700">ใหม่</span></span>
-        <span style="display:inline-flex;align-items:center;gap:8px;background:#fff;border:1.5px solid var(--border);border-radius:30px;padding:9px 16px;font-weight:600;font-size:14.5px;color:var(--ink);box-shadow:var(--shadow-sm)">📸 ถ่ายรูปบิล</span>
+      <div class="hero-ways">
+        <span class="way"><span class="we">⌨️</span> พิมพ์</span>
+        <span class="way way-hl"><span class="we">🎤</span> พูดก็ได้ <span class="wnew">ใหม่</span></span>
+        <span class="way"><span class="we">📸</span> ถ่ายรูปบิล</span>
       </div>
       <div class="hero-trust">
         <span class="trust-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg> ใช้ฟรี ไม่ต้องลงแอป</span>
@@ -1012,6 +1099,220 @@
 const st = document.createElement('style');
 st.textContent = '@media(max-width:980px){.nav-links.open{display:flex;position:absolute;top:66px;left:0;right:0;flex-direction:column;background:#fff;padding:10px 18px 16px;border-bottom:1px solid var(--border);box-shadow:var(--shadow-md)}.nav-links.open a{padding:12px 10px}}';
 document.head.appendChild(st);
+</script>
+<script>
+(function(){
+  // TH -> EN dictionary (คีย์ = ข้อความไทยจริงในหน้า)
+  var EN = {
+    "แบ่งเบา": "Bangbao",
+    "แบ่งเบา — ผู้ช่วยบัญชีร้านอาหาร จดให้เองผ่านไลน์": "Bangbao — Restaurant Accounting Assistant on LINE",
+    "ฟีเจอร์": "Features",
+    "คิดกำไรต่อจาน": "Profit per dish",
+    "วิธีใช้": "How it works",
+    "ราคา": "Pricing",
+    "เดลิเวอรี่": "Delivery",
+    "เข้าสู่ระบบ": "Log in",
+    "เริ่มใช้ฟรี": "Start free",
+    "บัญชีร้านอาหารในไลน์ • พิมพ์ พูด หรือถ่ายรูป": "Restaurant accounting on LINE • Type, speak or snap",
+    "เลิกจดมือ": "Stop writing by hand",
+    "เลิก": "Stop ",
+    "เดากำไร": "guessing profit",
+    "แค่พิมพ์ในไลน์": "just type in LINE",
+    "จดรายรับ-รายจ่ายแค่พิมพ์ในไลน์ หรือถ่ายรูปบิลให้ AI อ่านให้เอง รู้กำไรต่อจานทันที สรุปกำไร-ขาดทุนรายวัน/รายเดือนพร้อมกราฟ ครบในที่เดียว": "Log income and expenses by typing in LINE, or snap a receipt and let AI read it. Know your profit per dish instantly, with daily and monthly profit-and-loss and charts — all in one place.",
+    "เริ่มใช้ฟรีผ่านไลน์": "Start free on LINE",
+    "ลองคิดกำไรต่อจาน": "Try the profit calculator",
+    "พิมพ์": "Type",
+    "พูดก็ได้": "Speak",
+    "ใหม่": "New",
+    "ถ่ายรูปบิล": "Snap a bill",
+    "ใช้ฟรี ไม่ต้องลงแอป": "Free, no app to install",
+    "ตั้งค่าเสร็จใน 2 นาที": "Set up in 2 minutes",
+    "ข้อมูลปลอดภัย": "Your data is safe",
+    "กำไรวันนี้": "Profit today",
+    "จดอัตโนมัติ": "Auto-logged",
+    "28 รายการ": "28 entries",
+    "บบ": "BB",
+    "แบ่งเบา ผู้ช่วยบัญชี": "Bangbao Assistant",
+    "● ออนไลน์ • ตอบทันที": "● Online • Instant reply",
+    "ดึงยอดขายเข้าระบบอัตโนมัติจาก": "Auto-imports sales from",
+    "เงินสด & โอน": "Cash & transfer",
+    "ทุกอย่างที่ร้านต้องรู้ ในที่เดียว": "Everything your shop needs, in one place",
+    "ออกแบบมาเพื่อเจ้าของร้านอาหารที่ไม่มีเวลานั่งทำบัญชี ให้เทคโนโลยีจัดการแทน": "Built for restaurant owners with no time to sit and do the books — let technology handle it.",
+    "จดผ่านไลน์ แค่พิมพ์": "Log in LINE, just type",
+    "พิมพ์ \"ขายกะเพรา 5 จาน 250\" หรือ \"ซื้อหมู 800\" ในแชทไลน์ ระบบบันทึกเข้าบัญชีให้ทันที ไม่ต้องเปิดแอป": "Type \"sell 5 basil rice 250\" or \"buy pork 800\" in the LINE chat and it's booked instantly — no app to open.",
+    "ถ่ายรูปบิล AI อ่านให้": "Snap a bill, AI reads it",
+    "ถ่ายรูปใบเสร็จหรือบิลซื้อของ AI อ่านยอด แยกรายการ และลงบัญชีให้อัตโนมัติ — ไม่ต้องคีย์ทีละบรรทัด": "Snap a receipt or purchase bill — AI reads the total, splits the items and books it automatically. No line-by-line typing.",
+    "เฉพาะคน": "Invite only",
+    "ดึงยอดเดลิเวอรี่อัตโนมัติ": "Auto-import delivery sales",
+    "ยอด Grab / LineMan / Shopee Food เข้าระบบเองทุกวัน ไม่ต้องจดมือ (ฟีเจอร์เฉพาะคน อยากทดลองทักได้)": "Grab / LineMan / Shopee Food sales flow in every day, no manual entry (invite-only — message us to try).",
+    "รู้กำไรต่อจานทันที": "Know profit per dish instantly",
+    "วัตถุดิบขึ้นราคา เห็นเลยว่ากระทบกำไรแต่ละเมนูแค่ไหน ปรับราคาได้ทันก่อนขาดทุนเงียบ ๆ": "When ingredients get pricier, see exactly how each menu's profit is hit — adjust prices before you quietly lose money.",
+    "คิดค่าแรง + ต้นทุนรวมให้": "Labor + total cost, calculated",
+    "รวมค่าวัตถุดิบ ค่าแรง ค่าแก๊ส ค่าเช่า ให้อัตโนมัติ เห็นต้นทุนจริงต่อจานแบบครบทุกบาท": "Combines ingredient, labor, gas and rent costs automatically — see the true cost per dish down to the baht.",
+    "สรุปกำไร-ขาดทุน พร้อมกราฟ": "Profit & loss summary, with charts",
+    "ดูภาพรวมรายวัน/รายเดือนเป็นกราฟอ่านง่าย รู้ทันทีว่าวันไหนกำไรดี เดือนไหนต้องระวัง": "See the daily and monthly picture in easy-to-read charts — know which days are good and which months to watch.",
+    "พูดก็ได้ ไม่ต้องพิมพ์": "Speak — no typing needed",
+    "พิมพ์ไม่ถนัด? พูดใส่ไลน์ว่า \"ขายข้าว 50 บาท\" บอทถอดเสียงจดให้เลย เหมาะกับพ่อค้าแม่ค้าที่มือไม่ว่างหรือไม่ชอบพิมพ์": "Don't like typing? Say \"sell rice 50 baht\" into LINE and the bot transcribes and logs it — great for vendors whose hands are full.",
+    "งบกำไร-ขาดทุน + จุดคุ้มทุน": "P&L + break-even",
+    "รู้ว่าเดือนนี้เหลือเก็บเท่าไหร่จริง ๆ และต้องขายวันละเท่าไหร่ถึงไม่ขาดทุน ตัดสินใจได้บนตัวเลขจริง ไม่ใช่ความรู้สึก": "Know how much you really keep this month, and how much you must sell per day to break even. Decide on real numbers, not gut feel.",
+    "ออกไฟล์ Excel ส่งบัญชี": "Export Excel for your accountant",
+    "ดาวน์โหลดรายงานรายเดือนเป็นไฟล์ Excel พร้อมงบกำไร-ขาดทุน ส่งให้นักบัญชีหรือใช้ยื่นภาษีได้ทันที": "Download a monthly report as Excel with a full P&L — hand it to your accountant or file taxes right away.",
+    "ลองเล่นดู": "Try it",
+    "วัตถุดิบขึ้นราคา กำไรหายไปเท่าไร?": "Ingredients up — how much profit vanishes?",
+    "ลากสไลเดอร์ดูว่าถ้าต้นทุนวัตถุดิบขึ้น กำไรต่อจานของคุณจะเหลือเท่าไร — แบบเรียลไทม์": "Drag the slider to see, in real time, how much profit per dish you keep if ingredient costs rise.",
+    "เมนู: ข้าวกะเพราหมูไข่ดาว": "Menu: basil pork rice with fried egg",
+    "ปรับตัวเลขร้านคุณ": "Adjust your shop's numbers",
+    "ใส่ราคาขายและต้นทุนจริงของร้าน แล้วลองดูผลกระทบเมื่อของขึ้นราคา": "Enter your real selling price and costs, then see the impact when ingredients get pricier.",
+    "ราคาขาย / จาน": "Selling price / dish",
+    "ต้นทุนวัตถุดิบ / จาน": "Ingredient cost / dish",
+    "ค่าแรง + โสหุ้ย / จาน": "Labor + overhead / dish",
+    "วัตถุดิบขึ้นราคา": "Ingredient price rise",
+    "กำไรต่อจาน": "Profit per dish",
+    "ราคาขาย": "Selling price",
+    "ต้นทุนวัตถุดิบ": "Ingredient cost",
+    "ค่าแรง + โสหุ้ย": "Labor + overhead",
+    "เริ่มง่ายใน 3 ขั้น": "Get started in 3 steps",
+    "ใช้ได้เลยวันนี้ ไม่ต้องเรียนรู้": "Use it today — nothing to learn",
+    "แอดไลน์ \"แบ่งเบา\"": "Add \"Bangbao\" on LINE",
+    "สแกน QR หรือกดเพิ่มเพื่อน ตั้งชื่อร้านเสร็จใน 1 นาที ไม่ต้องดาวน์โหลดแอปอะไรเลย": "Scan the QR or add as a friend, name your shop — done in 1 minute. No app download at all.",
+    "พิมพ์ หรือถ่ายบิล": "Type or snap a bill",
+    "ขายอะไร ซื้ออะไร พิมพ์บอกในไลน์ หรือถ่ายรูปบิลส่งไป ที่เหลือ AI จัดการลงบัญชีให้เอง": "Whatever you sell or buy, type it in LINE or snap the bill — AI does the bookkeeping for you.",
+    "ดูสรุปกำไรทุกวัน": "See daily profit summaries",
+    "สิ้นวันรับสรุปกำไร-ขาดทุนพร้อมกราฟ รู้ว่าวันนี้เหลือเท่าไร เมนูไหนทำเงิน เมนูไหนกินทุน": "At day's end, get a profit-and-loss summary with charts — know what you kept, which menus earn and which eat capital.",
+    "ฟีเจอร์เฉพาะคน": "Invite-only feature",
+    "ยอดเดลิเวอรี่เข้าระบบเอง ทุกวัน": "Delivery sales flow in by themselves, every day",
+    "ไม่ต้องนั่งจดยอดจากแต่ละแอปทีละเจ้า ระบบดึงยอดขาย Grab / LineMan / Shopee Food มาให้อัตโนมัติ พร้อมหักค่า GP ให้เห็นกำไรสุทธิจริง ๆ อยากทดลองทักมาบอกได้เลย": "No more tallying each app one by one — the system pulls Grab / LineMan / Shopee Food sales automatically, deducts GP and shows your true net profit. Message us to try.",
+    "อัตโนมัติ": "Automatic",
+    "เหมาะกับใคร": "Who it's for",
+    "ออกแบบมาเพื่อร้านแบบคุณ": "Built for shops like yours",
+    "ไม่ว่าจะร้านเล็กหรือมีหลายช่องทางขาย แบ่งเบาช่วยให้รู้กำไรจริงได้ทุกแบบ": "Whether a small shop or one with many sales channels, Bangbao helps you know real profit every way.",
+    "ร้านตามสั่ง": "Made-to-order shops",
+    "ขายเร็ว ออเดอร์เยอะ ไม่มีเวลานั่งจด แค่พิมพ์ในไลน์ระหว่างพักก็บันทึกครบ รู้เลยเมนูไหนทำเงิน": "Fast sales, many orders, no time to write — just type in LINE on a break and it's all logged. Instantly see which menus earn.",
+    "“จดตอนล้างจานเสร็จ ใช้เวลาไม่ถึงนาที”": "\u201CI log it after washing up — under a minute.\u201D",
+    "คาเฟ่ & เบเกอรี่": "Cafés & bakeries",
+    "วัตถุดิบราคาขึ้นลงบ่อย ต้นทุนต่อแก้วต่อชิ้นสำคัญมาก เห็นกำไรต่อเมนูทันทีเมื่อของขึ้นราคา": "Ingredient prices swing often and cost per cup or piece matters. See profit per menu the moment costs rise.",
+    "“รู้ว่าต้องขยับราคากาแฟก่อนขาดทุนเงียบ ๆ”": "\u201CI know to nudge coffee prices before quietly losing money.\u201D",
+    "ร้านเดลิเวอรี่": "Delivery-first shops",
+    "ขายหลายแอป Grab/LineMan/Shopee แค่แคปหน้าสรุปยอดส่งมา ระบบหักค่า GP ให้เห็นกำไรสุทธิจริง": "Selling on many apps — Grab/LineMan/Shopee. Just send a screenshot of the totals; it deducts GP and shows true net profit.",
+    "“ไม่ต้องนั่งบวกยอดหลายแอปเองอีกต่อไป”": "\u201CNo more adding up totals across apps by hand.\u201D",
+    "คำถามที่พบบ่อย": "FAQ",
+    "สงสัยตรงไหน มีคำตอบ": "Questions? We've got answers",
+    "รวมคำถามที่เจ้าของร้านถามบ่อยที่สุดก่อนเริ่มใช้": "The questions restaurant owners ask most before starting.",
+    "ใช้ฟรีจริงไหม มีค่าใช้จ่ายแอบแฝงหรือเปล่า?": "Is it really free? Any hidden costs?",
+    "เริ่มใช้ฟรี ไม่ต้องผูกบัตร ไม่ต้องลงแอปเพิ่ม แค่แอดไลน์ก็จดได้เลย ไม่มีค่าใช้จ่ายแอบแฝง": "Start free, no card required, no extra app — just add on LINE and start logging. No hidden fees.",
+    "ข้อมูลร้านปลอดภัยไหม?": "Is my shop's data safe?",
+    "ข้อมูลบัญชีของแต่ละร้านแยกกันด้วยบัญชีไลน์ ร้านอื่นมองไม่เห็นข้อมูลของคุณ และเราไม่ขายข้อมูลให้บุคคลที่สาม อ่านรายละเอียดได้ที่หน้านโยบายความเป็นส่วนตัว": "Each shop's books are separated by LINE account; other shops can't see yours, and we don't sell data to third parties. See the Privacy Policy for details.",
+    "ต้องดาวน์โหลดแอปใหม่ไหม ใช้ยากหรือเปล่า?": "Do I need a new app? Is it hard?",
+    "ไม่ต้องลงแอปอะไรเพิ่มเลย ใช้ผ่านแอปไลน์ที่มีอยู่แล้ว แค่พิมพ์คุยกับบอทเหมือนแชทกับเพื่อน ใครพิมพ์ไลน์เป็นก็ใช้ได้": "No new app at all — use it inside the LINE you already have. Just chat with the bot like a friend. If you can text on LINE, you can use it.",
+    "AI อ่านบิลแม่นแค่ไหน?": "How accurate is the bill reader?",
+    "AI อ่านยอดรวมและแยกรายการได้แม่นในบิลส่วนใหญ่ ถ้ารูปชัดจะยิ่งแม่น และทุกครั้งที่บันทึก ระบบจะแสดงยอดให้ตรวจก่อน ถ้าผิดสามารถลบ/แก้ในแดชบอร์ดได้": "AI reads totals and itemizes most bills accurately — clearer photos are even better. Every entry is shown for you to check first, and you can delete or edit it in the dashboard.",
+    "ดูยอดเดลิเวอรี่ Grab/LineMan ได้ยังไง?": "How do I import Grab/LineMan sales?",
+    "แคปหน้าสรุปยอดขายจากแอปเดลิเวอรี่ส่งเข้าแชท ระบบจะอ่านยอดขาย หักค่า GP และลงบัญชีให้อัตโนมัติ เห็นกำไรสุทธิจริงของแต่ละเจ้า": "Screenshot the sales summary from the delivery app and send it to the chat — it reads the sales, deducts GP and books it automatically, showing true net profit per app.",
+    "ยกเลิกได้ตลอดไหม?": "Can I cancel anytime?",
+    "ได้ตลอด ไม่มีสัญญาผูกมัด แค่บล็อกหรือลบเพื่อนบอทเมื่อไหร่ก็ได้ ข้อมูลของคุณยังเป็นของคุณ": "Anytime — no contract. Just block or remove the bot whenever you like. Your data stays yours.",
+    "เริ่มฟรี ใช้ได้จริงทุกฟีเจอร์": "Start free — every feature really works",
+    "เริ่มต้นฟรีไม่มีค่าใช้จ่าย ไม่ต้องผูกบัตร อัปเกรดเมื่อร้านโตขึ้นเท่านั้น": "Start free at no cost, no card required. Upgrade only when your shop grows.",
+    "ฟรี": "Free",
+    "/ ตลอดไป": "/ forever",
+    "เหมาะกับร้านเล็ก-กลาง เริ่มจดวันนี้ได้เลย": "For small to mid-size shops — start logging today",
+    "จดด้วยพิมพ์ พูด หรือถ่ายรูปบิล": "Log by typing, speaking or snapping a bill",
+    "ยอดวันนี้ / ทั้งเดือน + กราฟ": "Today / whole month + charts",
+    "กำไรต่อจาน + จุดคุ้มทุน + งบกำไร-ขาดทุน": "Profit per dish + break-even + P&L",
+    "ใช้ AI จด/อ่านบิลได้ทุกวัน": "Use AI to log/read bills every day",
+    "แนะนำเมื่อร้านโต": "Recommended as you grow",
+    "ราคาพิเศษ": "Special price",
+    "ช่วงเปิดตัว": "launch offer",
+    "สำหรับร้านที่จดเยอะทุกวัน หรือมีหลายคนช่วยจด": "For shops logging a lot daily, or with several people helping",
+    "ทุกอย่างในแพ็กฟรี": "Everything in Free",
+    "ใช้ AI จด/อ่านบิลได้มากขึ้นหลายเท่า": "Many times more AI logging/bill-reading",
+    "เพิ่มพนักงานช่วยจดเข้าบัญชีเดียวกัน": "Add staff to log into the same account",
+    "รองรับร้านที่ออเดอร์เยอะทุกวัน": "Handles high-order shops every day",
+    "ดูแลใกล้ชิดจากทีมงาน": "Close support from our team",
+    "ทักไลน์เพื่ออัปเกรด": "Message us on LINE to upgrade",
+    "เริ่มฟรีได้เลย ไม่ต้องกรอกบัตร • อัปเกรด/ยกเลิกได้ตลอด": "Start free, no card • upgrade or cancel anytime",
+    "เริ่มรู้กำไรร้านคุณ ตั้งแต่วันนี้": "Start knowing your shop's profit, today",
+    "ใช้ฟรี ไม่ต้องลงแอป แค่แอดไลน์ก็เริ่มจดได้เลย เปลี่ยนการเดากำไรเป็นการรู้จริง": "Free, no app to install — just add on LINE and start logging. Turn guessing profit into knowing it.",
+    "แอดไลน์ เริ่มใช้ฟรี": "Add on LINE, start free",
+    "ดูฟีเจอร์ทั้งหมด": "See all features",
+    "ไม่มีค่าใช้จ่ายแอบแฝง • ยกเลิกได้ตลอด": "No hidden fees • cancel anytime",
+    "สแกนเพื่อแอดไลน์": "Scan to add on LINE",
+    "เปิดกล้องหรือไลน์ สแกน QR นี้": "Open your camera or LINE and scan this QR",
+    "แล้วเริ่มจดได้เลย": "then start logging",
+    "บัญชีร้านอาหารที่จดให้เองผ่านไลน์ ให้เจ้าของร้านมีเวลาโฟกัสกับการขาย ไม่ใช่การจดบัญชี": "Restaurant accounting that logs itself via LINE — so owners can focus on selling, not bookkeeping.",
+    "ผลิตภัณฑ์": "Product",
+    "ดึงยอดเดลิเวอรี่": "Delivery import",
+    "วิธีใช้งาน": "How to use",
+    "ช่วยเหลือ": "Support",
+    "ติดต่อทีมงาน": "Contact us",
+    "คู่มือการใช้งาน": "User guide",
+    "บริษัท": "Company",
+    "นโยบายความเป็นส่วนตัว": "Privacy Policy",
+    "เงื่อนไขการใช้งาน": "Terms of Use",
+    "© 2026 แบ่งเบา • สร้างเพื่อเจ้าของร้านอาหารไทย": "© 2026 Bangbao • Built for Thai restaurant owners",
+    "ทำด้วย ♥ ที่ประเทศไทย": "Made with \u2665 in Thailand"
+  };
+
+  var orig = new Map();       // textNode -> original Thai
+  var lang = 'th';
+
+  function cache(node){ if(!orig.has(node)) orig.set(node, node.nodeValue); }
+
+  function textNodes(root){
+    var out=[], w=document.createTreeWalker(root, NodeFilter.SHOW_TEXT, {
+      acceptNode:function(n){
+        var p=n.parentNode; if(!p) return NodeFilter.FILTER_REJECT;
+        var tag=p.nodeName; if(tag==='SCRIPT'||tag==='STYLE'||tag==='TEXTAREA') return NodeFilter.FILTER_REJECT;
+        return n.nodeValue && n.nodeValue.trim() ? NodeFilter.FILTER_ACCEPT : NodeFilter.FILTER_REJECT;
+      }
+    });
+    var n; while((n=w.nextNode())) out.push(n); return out;
+  }
+
+  function translateNode(n){
+    cache(n);
+    var o = orig.get(n);
+    if(lang==='en'){
+      var t=o.trim(), hit=EN[t];
+      if(hit!==undefined){ n.nodeValue = o.replace(t, hit); }
+    } else {
+      n.nodeValue = o;
+    }
+  }
+
+  function apply(){ textNodes(document.body).forEach(translateNode); }
+
+  function setLang(l){
+    lang = l;
+    try{ localStorage.setItem('bb_lang', l); }catch(e){}
+    document.documentElement.setAttribute('lang', l);
+    document.title = (l==='en') ? (EN[document.title] || document.title)
+                                : "แบ่งเบา — ผู้ช่วยบัญชีร้านอาหาร จดให้เองผ่านไลน์";
+    apply();
+    var btn=document.getElementById('langBtn');
+    if(btn) btn.textContent = (l==='en') ? 'ไทย' : 'EN';
+  }
+  window.toggleLang = function(){ setLang(lang==='en'?'th':'en'); };
+
+  function init(){
+    var saved='th'; try{ saved=localStorage.getItem('bb_lang')||'th'; }catch(e){}
+    // แปลรอบแรกเพื่อ cache ต้นฉบับไว้เสมอ
+    setLang(saved);
+    // จับข้อความที่ JS สร้างทีหลัง (เดโมแชท) มาแปลด้วย
+    var mo=new MutationObserver(function(muts){
+      if(lang!=='en') { muts.forEach(function(m){m.addedNodes.forEach(function(nd){
+        if(nd.nodeType===3) cache(nd); else if(nd.nodeType===1) textNodes(nd).forEach(cache);
+      });}); return; }
+      muts.forEach(function(m){ m.addedNodes.forEach(function(nd){
+        if(nd.nodeType===3) translateNode(nd);
+        else if(nd.nodeType===1) textNodes(nd).forEach(translateNode);
+      }); });
+    });
+    mo.observe(document.body,{childList:true,subtree:true});
+  }
+  if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',init);
+  else init();
+})();
+
 </script>
 </body>
 </html>

@@ -64,3 +64,11 @@ npm start
 - **og:image** (og.png 1200×630) + twitter card + theme-color + canonical สำหรับแชร์
 - เพิ่มลิงก์ "ราคา" ใน nav + footer
 - ไฟล์ใหม่: public/og.png, public/line-qr.png
+
+---
+
+## Dark Mode + สองภาษา (ไทย-อังกฤษ)
+- **Dark Mode**: ปุ่มดวงอาทิตย์/พระจันทร์ใน nav · จำค่าใน localStorage · ค่าเริ่มต้นตาม prefers-color-scheme ของเครื่อง · ตั้งธีมก่อน render กัน flash · override ตัวแปรสี + พื้นผิว (nav/cards/plan/faq/calc/delivery ฯลฯ) ครบทุก section
+- **สองภาษา TH-EN**: ปุ่ม EN/ไทย ใน nav · ระบบ i18n แปลตาม text node (ดิกชันนารี 146 คำในสคริปต์ท้ายไฟล์) · จำภาษาใน localStorage · อัปเดต <html lang> + title · MutationObserver จับข้อความที่ JS สร้างทีหลัง (เดโมแชท) มาแปลด้วย
+- ทั้งสองใช้ร่วมกันได้ (EN + Dark พร้อมกัน)
+- แก้เฉพาะ public/index.html (สคริปต์ i18n ฝังอยู่ในไฟล์แล้ว)
